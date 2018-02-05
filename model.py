@@ -40,8 +40,8 @@ class ESPCN(object):
     def build_model(self):
 
         if self.is_train:
-            self.images_prev_curr = tf.placeholder(tf.float32, [None, 2, self.image_size, self.image_size, self.c_dim], name='images_prev_curr')
-            self.images_next_curr = tf.placeholder(tf.float32, [None, 2, self.image_size, self.image_size, self.c_dim], name='images_next_curr')
+            self.images_prev_curr = tf.placeholder(tf.float32, [None, self.image_size, self.image_size, 2*self.c_dim], name='images_prev_curr')
+            self.images_next_curr = tf.placeholder(tf.float32, [None, self.image_size, self.image_size, 2*self.c_dim], name='images_next_curr')
             self.labels = tf.placeholder(tf.float32, [None, self.image_size * self.scale , self.image_size * self.scale, self.c_dim], name='labels')
         else:
             '''
@@ -97,8 +97,8 @@ class ESPCN(object):
         #fusionB = tf.nn.relu(tf.nn.conv2d(self.imgB, self.weights['EarlyFusionBw'], strides=[1,1,1,1], padding='SAME') + self.biases['EarlyFusionBb'])
         
         # Reshapes prev and next with current frame input sets 
-        prev_currX = tf.reshape(self.images_next_curr, [-1, self.image_size, self.image_size, self.c_dim])
-        next_currX = tf.reshape(self.images_prev_curr, [-1, self.image_size, self.image_size, self.c_dim])
+        prev_currX = tf.reshape(self.images_next_curr, [-1, self.image_size, self.image_size, 2*self.c_dim])
+        next_currX = tf.reshape(self.images_prev_curr, [-1, self.image_size, self.image_size, 2*self.c_dim])
         
         # Transformer 1
         
@@ -108,7 +108,21 @@ class ESPCN(object):
         t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
         t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
         t1_course_l5 = tf.layers.conv2d(t1_course_l4,  2*self.scale*self.scale, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_out = tf.layers.conv2d(t1_course_l5,  2, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Warping
+        
+        # Gets target image to be warped
+        targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
+        
+        # Generates tensor of dimension [-1, h, w, 3+2]
+        targetImg = tf.concat([targetImg, t1_course_out], 3)
+        
+        # Applies warping using 2D convolution layer to estimate image at time t=t
+        t1_course_warp = tf.layers.conv2d(targetImg,  3, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Resizes using billinear interpolation
+        t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.image_size, self.image_size) )
         
         
         # Fine flow

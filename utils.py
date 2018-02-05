@@ -147,7 +147,7 @@ def make_sub_data(data, config):
                 sub_curr_prev = np.dstack((sub_input, sub_input_prev))
                 sub_curr_next = np.dstack((sub_input, sub_input_next))
                 
-                # Prepares sub_input_data of dimension [2 x l x w x c_dim]
+                # Prepares sub_input_data of dimension [2 x l x w x 2*c_dim]
                 sub_input_data = np.array([sub_curr_prev, sub_curr_next])
                                 
                 # Add to sequence
