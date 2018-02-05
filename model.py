@@ -40,7 +40,8 @@ class ESPCN(object):
     def build_model(self):
 
         if self.is_train:
-            self.images = tf.placeholder(tf.float32, [None, self.image_size, self.image_size, self.c_dim], name='images')
+            self.images_prev_curr = tf.placeholder(tf.float32, [None, 2, self.image_size, self.image_size, self.c_dim], name='images_prev_curr')
+            self.images_next_curr = tf.placeholder(tf.float32, [None, 2, self.image_size, self.image_size, self.c_dim], name='images_next_curr')
             self.labels = tf.placeholder(tf.float32, [None, self.image_size * self.scale , self.image_size * self.scale, self.c_dim], name='labels')
         else:
             '''
@@ -95,6 +96,24 @@ class ESPCN(object):
         # Produces early fusion output from images at time t and t+1
         #fusionB = tf.nn.relu(tf.nn.conv2d(self.imgB, self.weights['EarlyFusionBw'], strides=[1,1,1,1], padding='SAME') + self.biases['EarlyFusionBb'])
         
+        # Reshapes prev and next with current frame input sets 
+        prev_currX = tf.reshape(self.images_next_curr, [-1, self.image_size, self.image_size, self.c_dim])
+        next_currX = tf.reshape(self.images_prev_curr, [-1, self.image_size, self.image_size, self.c_dim])
+        
+        # Transformer 1
+        
+        # Course flow
+        t1_course_l1 = tf.layers.conv2d(prev_currX,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer) 
+        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  2*self.scale*self.scale, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_out = tf.layers.conv2d(t1_course_l5,  2, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        
+        # Fine flow
+        
+        
         wInitializer1 = tf.random_normal_initializer(stddev=np.sqrt(2.0/25/3))
         wInitializer2 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/64))
         wInitializer3 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/32))
@@ -127,7 +146,7 @@ class ESPCN(object):
         return tf.reshape(X, (self.batch_size, a*r, b*r, 1))
 
     # NOTE:test without batchsize
-    def _phase_shift_test(self, I ,r):
+    def _phase_shift_test(self, I, r):
         bsize, a, b, c = I.get_shape().as_list()
         X = tf.reshape(I, (1, a, b, r, r))
         X = tf.split(X, a, 1)  # a, [bsize, b, r, r]
@@ -140,6 +159,26 @@ class ESPCN(object):
     def PS(self, X, r):
         # Main OP that you can arbitrarily use in you tensorflow code
         Xc = tf.split(X, 3, 3)
+        if self.is_train:
+            X = tf.concat([self._phase_shift(x, r) for x in Xc], 3) # Do the concat RGB
+        else:
+            X = tf.concat([self._phase_shift_test(x, r) for x in Xc], 3) # Do the concat RGB
+        return X
+    
+    '''
+       Performs phase shift operation for tensor of dimension
+       (batch_size, img_height, img_width, c_dim)
+       
+       Inputs:
+       X: tensor of dimension (batch_size, img_height, img_width, c_dim)
+       r: upscaling factor
+       c_dim: c_dim of X
+    '''
+    def PS2(self, X, r, c_dim):
+        # Main OP that you can arbitrarily use in you tensorflow code
+        
+        # Evenly splits Xc into 2 parts along axis 3 (# of channels)
+        Xc = tf.split(X, c_dim, 3)
         if self.is_train:
             X = tf.concat([self._phase_shift(x, r) for x in Xc], 3) # Do the concat RGB
         else:
