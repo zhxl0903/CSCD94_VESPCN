@@ -60,7 +60,8 @@ class ESPCN(object):
             # Defines placeholder for sets of 2 images at time t and t+1
             #self.imgB = tf.placeholder(tf.float32, [None, self.h, self.w, self.c_dim*2], name = 'image1')
             
-            self.images = tf.placeholder(tf.float32, [None, self.h, self.w, self.c_dim], name='images')
+            self.images_prev_curr = tf.placeholder(tf.float32, [None, self.h, self.w, 2*self.c_dim], name='images_prev_curr')
+            self.images_next_curr = tf.placeholder(tf.float32, [None, self.h, self.w, 2*self.c_dim], name='images_next_curr')
             self.labels = tf.placeholder(tf.float32, [None, self.h * self.scale, self.w * self.scale, self.c_dim], name='labels')
             
         '''self.weights = {
@@ -89,20 +90,22 @@ class ESPCN(object):
         self.saver = tf.train.Saver() # To save checkpoint
     
     def spatial_transformer(self, frameSet):
+        
+        # Zero initialization
         biasInitializer = tf.zeros_initializer()
         
-        # Transformer 1
-        curr_other = tf.reshape(frameSet, [-1, self.image_size, self.image_size, 2*self.c_dim])
+        # Orthogonal initialization with gain sqrt(2)
+        weight_init = tf.orthogonal_initializer(np.sqrt(2))
         
         # Course flow
-        t1_course_l1 = tf.layers.conv2d(curr_other,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer) 
-        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  32, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l1 = tf.layers.conv2d(frameSet,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer) 
+        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  32, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
         
         # Output shape: (-1, l, w, 2)
-        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
         
         # Course Warping
         
@@ -114,25 +117,28 @@ class ESPCN(object):
         
         # Applies warping using 2D convolution layer to estimate image at time t=t
         # Kernel size 3 is used to estimate dI/dx and dI/dy from neighbouring pixel values
-        t1_course_warp = tf.layers.conv2d(t1_course_warp_in,  3, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_warp = tf.layers.conv2d(t1_course_warp_in,  3, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
         
         # Resizes using billinear interpolation
         # Output shape: (batchSize, h, w, c_dim)
-        t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.image_size, self.image_size) )
+        if self.is_train:
+            t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.image_size, self.image_size) )
+        else:
+            t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.h, self.w) )
         
         # Fine flow
         
-        # combines images input, course flow estimation, and course image estimation along dimension 3
+        # Combines images input, course flow estimation, and course image estimation along dimension 3
         t1_fine_in = tf.concat([frameSet, t1_course_out, t1_course_image_out], 3)
         
-        t1_fine_l1 = tf.layers.conv2d(t1_fine_in,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer) 
-        t1_fine_l2 = tf.layers.conv2d(t1_fine_l1,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_fine_l3 = tf.layers.conv2d(t1_fine_l2,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_fine_l4 = tf.layers.conv2d(t1_fine_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_fine_l5 = tf.layers.conv2d(t1_fine_l4,  8, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_fine_l1 = tf.layers.conv2d(t1_fine_in,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer) 
+        t1_fine_l2 = tf.layers.conv2d(t1_fine_l1,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_fine_l3 = tf.layers.conv2d(t1_fine_l2,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_fine_l4 = tf.layers.conv2d(t1_fine_l3,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_fine_l5 = tf.layers.conv2d(t1_fine_l4,  8, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
         
         # Output shape(-1, l, w, 2)
-        t1_fine_out = tf.layers.conv2d(t1_fine_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_fine_out = tf.layers.conv2d(t1_fine_l5, 2, 1, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
         
         # Combines fine flow and course flow estimates
         # Output shape(-1, l, w, 2)
@@ -146,11 +152,15 @@ class ESPCN(object):
         # Applies warping using 2D convolution layer to estimate image at time t=t
         # Kernel size 3 is used to estimate dI/dx and dI/dy from neighbouring pixel values
         # Output shape: (batchSize, h, w, c_dim)
-        t1_fine_warp = tf.layers.conv2d(t1_fine_warp_in, 3, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_fine_warp = tf.layers.conv2d(t1_fine_warp_in, 3, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
         
         # Resizes using billinear interpolation
         # Output shape: (batchSize, h, w, c_dim)
-        t1_image_out = tf.image.resize_images(t1_fine_warp, (self.image_size, self.image_size))
+        if self.is_train:
+            t1_image_out = tf.image.resize_images(t1_fine_warp, (self.image_size, self.image_size))
+        else:
+            t1_image_out = tf.image.resize_images(t1_fine_warp, (self.h, self.w))
+            
         return(t1_image_out)
         
     def model(self):
@@ -170,22 +180,17 @@ class ESPCN(object):
        
        targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
        
-       # Concates motion compensated neighbouring frames and target frame
+       # Concatenates motion compensated neighbouring frames and target frame
        imgSet = tf.concat([imgPrev, targetImg, imgNext], 3)
-       
-       
        
        wInitializer1 = tf.random_normal_initializer(stddev=np.sqrt(2.0/25/3))
        wInitializer2 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/64))
        wInitializer3 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/32))
        biasInitializer = tf.zeros_initializer()
        
-       if self.is_train:
-          X = tf.reshape(self.images, [-1, self.image_size, self.image_size, self.c_dim])
-       else:
-          X = tf.reshape(self.images, [-1, self.h, self.w, self.c_dim])
-        
-       conv1 = tf.layers.conv2d(imgSet,  64, 5, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+       EarlyFusion =  tf.layers.conv2d(imgSet,  3, 3, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+       
+       conv1 = tf.layers.conv2d(EarlyFusion,  64, 5, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
        conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer2,  biasInitializer = biasInitializer)
        conv3 = tf.layers.conv2d(conv2,  self.c_dim * self.scale * self.scale, 3, padding='same', activation=None, kernel_initializer = wInitializer3,  biasInitializer = biasInitializer)
        #conv1 = tf.nn.relu(tf.nn.conv2d(self.images, self.weights['w1'], strides=[1,1,1,1], padding='SAME') + self.biases['b1'])
