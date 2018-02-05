@@ -87,7 +87,72 @@ class ESPCN(object):
         self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
 
         self.saver = tf.train.Saver() # To save checkpoint
-
+    
+    def spatial_transformer(self, frameSet):
+        biasInitializer = tf.zeros_initializer()
+        
+        # Transformer 1
+        curr_other = tf.reshape(frameSet, [-1, self.image_size, self.image_size, 2*self.c_dim])
+        
+        # Course flow
+        t1_course_l1 = tf.layers.conv2d(curr_other,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer) 
+        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  32, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Output shape: (-1, l, w, 2)
+        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Course Warping
+        
+        # Gets target image to be warped
+        targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
+        
+        # Generates tensor of dimension [-1, h, w, 3+2]
+        t1_course_warp_in = tf.concat([targetImg, t1_course_out], 3)
+        
+        # Applies warping using 2D convolution layer to estimate image at time t=t
+        # Kernel size 3 is used to estimate dI/dx and dI/dy from neighbouring pixel values
+        t1_course_warp = tf.layers.conv2d(t1_course_warp_in,  3, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Resizes using billinear interpolation
+        # Output shape: (batchSize, h, w, c_dim)
+        t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.image_size, self.image_size) )
+        
+        # Fine flow
+        
+        # combines images input, course flow estimation, and course image estimation along dimension 3
+        t1_fine_in = tf.concat([frameSet, t1_course_out, t1_course_image_out], 3)
+        
+        t1_fine_l1 = tf.layers.conv2d(t1_fine_in,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer) 
+        t1_fine_l2 = tf.layers.conv2d(t1_fine_l1,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_fine_l3 = tf.layers.conv2d(t1_fine_l2,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_fine_l4 = tf.layers.conv2d(t1_fine_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        t1_fine_l5 = tf.layers.conv2d(t1_fine_l4,  8, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Output shape(-1, l, w, 2)
+        t1_fine_out = tf.layers.conv2d(t1_fine_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Combines fine flow and course flow estimates
+        # Output shape(-1, l, w, 2)
+        t1_combined_flow = t1_course_out + t1_fine_out
+        
+        # Fine Warping
+        
+        # Concatnates target image and combined flow channels
+        t1_fine_warp_in = tf.concat([targetImg, t1_combined_flow], 3)
+        
+        # Applies warping using 2D convolution layer to estimate image at time t=t
+        # Kernel size 3 is used to estimate dI/dx and dI/dy from neighbouring pixel values
+        # Output shape: (batchSize, h, w, c_dim)
+        t1_fine_warp = tf.layers.conv2d(t1_fine_warp_in, 3, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+        
+        # Resizes using billinear interpolation
+        # Output shape: (batchSize, h, w, c_dim)
+        t1_image_out = tf.image.resize_images(t1_fine_warp, (self.image_size, self.image_size))
+        return(t1_image_out)
+        
     def model(self):
         
         # Produces early fusion output from images at time t and t-1
@@ -97,56 +162,37 @@ class ESPCN(object):
         #fusionB = tf.nn.relu(tf.nn.conv2d(self.imgB, self.weights['EarlyFusionBw'], strides=[1,1,1,1], padding='SAME') + self.biases['EarlyFusionBb'])
         
         # Reshapes prev and next with current frame input sets 
-        prev_currX = tf.reshape(self.images_next_curr, [-1, self.image_size, self.image_size, 2*self.c_dim])
-        next_currX = tf.reshape(self.images_prev_curr, [-1, self.image_size, self.image_size, 2*self.c_dim])
         
-        # Transformer 1
+       # Generates motion compensated images from previous and next images
+       # using 2 spatial transformers
+       imgPrev = self.spatial_transformer(self.images_prev_curr)
+       imgNext = self.spatial_transformer(self.images_next_curr)
+       
+       targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
+       
+       # Concates motion compensated neighbouring frames and target frame
+       imgSet = tf.concat([imgPrev, targetImg, imgNext], 3)
+       
+       
+       
+       wInitializer1 = tf.random_normal_initializer(stddev=np.sqrt(2.0/25/3))
+       wInitializer2 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/64))
+       wInitializer3 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/32))
+       biasInitializer = tf.zeros_initializer()
+       
+       if self.is_train:
+          X = tf.reshape(self.images, [-1, self.image_size, self.image_size, self.c_dim])
+       else:
+          X = tf.reshape(self.images, [-1, self.h, self.w, self.c_dim])
         
-        # Course flow
-        t1_course_l1 = tf.layers.conv2d(prev_currX,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer) 
-        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, strides=(1, 1), padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  2*self.scale*self.scale, 3, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        
-        # Warping
-        
-        # Gets target image to be warped
-        targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
-        
-        # Generates tensor of dimension [-1, h, w, 3+2]
-        targetImg = tf.concat([targetImg, t1_course_out], 3)
-        
-        # Applies warping using 2D convolution layer to estimate image at time t=t
-        t1_course_warp = tf.layers.conv2d(targetImg,  3, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        
-        # Resizes using billinear interpolation
-        t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.image_size, self.image_size) )
-        
-        
-        # Fine flow
-        
-        
-        wInitializer1 = tf.random_normal_initializer(stddev=np.sqrt(2.0/25/3))
-        wInitializer2 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/64))
-        wInitializer3 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/32))
-        biasInitializer = tf.zeros_initializer()
-        
-        if self.is_train:
-            X = tf.reshape(self.images, [-1, self.image_size, self.image_size, self.c_dim])
-        else:
-            X = tf.reshape(self.images, [-1, self.h, self.w, self.c_dim])
-            
-        conv1 = tf.layers.conv2d(X,  64, 5, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-        conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer2,  biasInitializer = biasInitializer)
-        conv3 = tf.layers.conv2d(conv2,  self.c_dim * self.scale * self.scale, 3, padding='same', activation=None, kernel_initializer = wInitializer3,  biasInitializer = biasInitializer)
-        #conv1 = tf.nn.relu(tf.nn.conv2d(self.images, self.weights['w1'], strides=[1,1,1,1], padding='SAME') + self.biases['b1'])
-        #conv2 = tf.nn.relu(tf.nn.conv2d(conv1, self.weights['w2'], strides=[1,1,1,1], padding='SAME') + self.biases['b2'])
-        #conv3 = tf.nn.conv2d(conv2, self.weights['w3'], strides=[1,1,1,1], padding='SAME') + self.biases['b3'] # This layer don't need ReLU
-
-        ps = self.PS(conv3, self.scale)
-        return tf.nn.tanh(ps)
+       conv1 = tf.layers.conv2d(imgSet,  64, 5, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+       conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer2,  biasInitializer = biasInitializer)
+       conv3 = tf.layers.conv2d(conv2,  self.c_dim * self.scale * self.scale, 3, padding='same', activation=None, kernel_initializer = wInitializer3,  biasInitializer = biasInitializer)
+       #conv1 = tf.nn.relu(tf.nn.conv2d(self.images, self.weights['w1'], strides=[1,1,1,1], padding='SAME') + self.biases['b1'])
+       #conv2 = tf.nn.relu(tf.nn.conv2d(conv1, self.weights['w2'], strides=[1,1,1,1], padding='SAME') + self.biases['b2'])
+       #conv3 = tf.nn.conv2d(conv2, self.weights['w3'], strides=[1,1,1,1], padding='SAME') + self.biases['b3'] # This layer don't need ReLU
+       ps = self.PS(conv3, self.scale)
+       return tf.nn.tanh(ps)
 
     #NOTE: train with batch size 
     def _phase_shift(self, I, r):
