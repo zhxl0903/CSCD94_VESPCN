@@ -22,6 +22,7 @@ class ESPCN(object):
                  sess,
                  image_size,
                  is_train,
+                 train_mode,
                  scale,
                  batch_size,
                  c_dim,
@@ -33,16 +34,62 @@ class ESPCN(object):
         self.is_train = is_train
         self.c_dim = c_dim
         self.scale = scale
+        self.train_mode = train_mode
         self.batch_size = batch_size
         self.test_img = test_img
         self.build_model()
 
     def build_model(self):
-
+        
+        
         if self.is_train:
-            self.images_prev_curr = tf.placeholder(tf.float32, [None, self.image_size, self.image_size, 2*self.c_dim], name='images_prev_curr')
-            self.images_next_curr = tf.placeholder(tf.float32, [None, self.image_size, self.image_size, 2*self.c_dim], name='images_next_curr')
-            self.labels = tf.placeholder(tf.float32, [None, self.image_size * self.scale , self.image_size * self.scale, self.c_dim], name='labels')
+            
+            # Prepares placeholder based on train_mode used
+            if self.train_mode == 0:
+                
+                # Sets up placeholders for training spatial transformer if train mode is 0
+                self.images_curr_prev = tf.placeholder(tf.float32,
+                                                       [None, self.image_size,
+                                                        self.image_size,
+                                                        2*self.c_dim],
+                                                        name='images_curr_prev')
+                self.labels = tf.placeholder(tf.float32,
+                                             [None, self.image_size,
+                                              self.image_size,
+                                              self.c_dim], name='labels')
+            elif self.train_mode == 1:
+                
+                # Sets up placeholders for training subpixel net if train mode is 1
+                self.images_in = tf.placeholder(tf.float32, [None,
+                                                             self.image_size,
+                                                             self.image_size,
+                                                             3*self.c_dim],
+                                                            name='image_in')
+                self.labels = tf.placeholder(tf.float32, 
+                                             [None,
+                                              self.image_size * self.scale ,
+                                              self.image_size * self.scale,
+                                              self.c_dim], name='labels')
+            else:
+                
+                # Sets up placeholders for training full network if train mode is 2 or other numbers
+                self.images_prev_curr = tf.placeholder(tf.float32,
+                                                       [None, 
+                                                        self.image_size,
+                                                        self.image_size,
+                                                        2*self.c_dim],
+                                                        name='images_prev_curr')
+                self.images_next_curr = tf.placeholder(tf.float32,
+                                                       [None,
+                                                        self.image_size,
+                                                        self.image_size,
+                                                        2*self.c_dim],
+                                                        name='images_next_curr')
+                self.labels = tf.placeholder(tf.float32,
+                                             [None,
+                                              self.image_size * self.scale,
+                                              self.image_size * self.scale,
+                                              self.c_dim], name='labels')
         else:
             '''
                 Because the test need to put image to model,
@@ -52,44 +99,80 @@ class ESPCN(object):
             input_ = imread(data[0])       
             self.h, self.w, c = input_.shape
             
-            
-            # Defines placeholder for sets of 2 images at time t and t-1
-            # Note: None means we accept any number of sets of 2 images
-            #self.imgA = tf.placeholder(tf.float32, [None, self.h, self.w, self.c_dim*2], name = 'image0')
-            
-            # Defines placeholder for sets of 2 images at time t and t+1
-            #self.imgB = tf.placeholder(tf.float32, [None, self.h, self.w, self.c_dim*2], name = 'image1')
-            
-            self.images_prev_curr = tf.placeholder(tf.float32, [None, self.h, self.w, 2*self.c_dim], name='images_prev_curr')
-            self.images_next_curr = tf.placeholder(tf.float32, [None, self.h, self.w, 2*self.c_dim], name='images_next_curr')
-            self.labels = tf.placeholder(tf.float32, [None, self.h * self.scale, self.w * self.scale, self.c_dim], name='labels')
-            
-        '''self.weights = {
-            'EarlyFusionAw':  tf.Variable(tf.random_normal([1, 1, 2*self.c_dim, 3], stddev=np.sqrt(2.0/1/6)), name='EarlyFusionA')
-            'EarlyFusionBw': tf.Variable(tf.random_normal([1, 1, 2*self.c_dim, 3], stddev=np.sqrt(2.0/1/6)), name='EarlyFusionB')
-            
-            'w1': tf.Variable(tf.random_normal([5, 5, self.c_dim, 64], stddev=np.sqrt(2.0/25/3)), name='w1'),
-            'w2': tf.Variable(tf.random_normal([3, 3, 64, 32], stddev=np.sqrt(2.0/9/64)), name='w2'),
-            'w3': tf.Variable(tf.random_normal([3, 3, 32, self.c_dim * self.scale * self.scale ], stddev=np.sqrt(2.0/9/32)), name='w3')
-        }
-        
-        self.biases = {
-            'EarlyFusionAb': tf.Variable(tf.zeros([3], name='EarlyFusionAb'))
-            'EarlyFusionBb': tf.Variable(tf.zeros([3], name='EarlyFusionBb'))
+            # Prepares placeholders based on training_mode used
+            if self.train_mode == 0:
                 
-            'b1': tf.Variable(tf.zeros([64], name='b1')),
-            'b2': tf.Variable(tf.zeros([32], name='b2')),
-            'b3': tf.Variable(tf.zeros([self.c_dim * self.scale * self.scale ], name='b3'))
-        }'''
-        
+                # Sets up placeholders for training spatial transformer if train mode is 0
+                self.images_curr_prev = tf.placeholder(tf.float32,
+                                                       [None,
+                                                        self.h,
+                                                        self.w,
+                                                        2*self.c_dim],
+                                                        name='images_curr_prev')
+                self.labels = tf.placeholder(tf.float32,
+                                             [None,
+                                              self.h,
+                                              self.w,
+                                              self.c_dim], name='labels')
+            elif self.train_mode == 1:
+                
+                # Sets up placeholders for training subpixel net if train mode is 1
+                self.images_in = tf.placeholder(tf.float32,
+                                                [None,
+                                                 self.h,
+                                                 self.w,
+                                                 3*self.c_dim],
+                                                 name='images_in')
+                self.labels = tf.placeholder(tf.float32,
+                                             [None,
+                                              self.h * self.scale,
+                                              self.w * self.scale,
+                                              self.c_dim], name='labels')
+            else:
+                
+                # Sets up placeholders for training full network if train mode is 2 or other numbers
+                self.images_prev_curr = tf.placeholder(tf.float32,
+                                                       [None,
+                                                        self.h,
+                                                        self.w,
+                                                        2*self.c_dim],
+                                                        name='images_prev_curr')
+                self.images_next_curr = tf.placeholder(tf.float32,
+                                                       [None,
+                                                        self.h,
+                                                        self.w,
+                                                        2*self.c_dim],
+                                                        name='images_next_curr')
+                self.labels = tf.placeholder(tf.float32,
+                                             [None,
+                                              self.h * self.scale,
+                                              self.w * self.scale,
+                                              self.c_dim], name='labels')
         
         self.pred = self.model()
         
-        self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
+        # Prepares loss function based on training mode
+        if self.train_mode == 0:
+            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
+        elif self.train_mode == 1:
+            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
+        else:
+            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
 
         self.saver = tf.train.Saver() # To save checkpoint
+    '''
+    Builds a spatial transformer given frameSet.
     
-    def spatial_transformer(self, frameSet):
+    Inputs:
+    frameSet: frameSet containing 2 images: target frame and neighbouring frame
+              Tensor of dimension: [nBatch, imgH, imgW, 6]
+              
+    reuse: True iff Weights are the same as network where reuse is false
+    
+    Returns: Output image of this spatial transformer network
+             Tensor of dimension: [nBatch, imgH, imgW, 3]
+    '''
+    def spatial_transformer(self, frameSet, reuse=False):
         
         # Zero initialization
         biasInitializer = tf.zeros_initializer()
@@ -98,106 +181,186 @@ class ESPCN(object):
         weight_init = tf.orthogonal_initializer(np.sqrt(2))
         
         # Course flow
-        t1_course_l1 = tf.layers.conv2d(frameSet,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer) 
-        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
-        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
-        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
-        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  32, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_course_l1 = tf.layers.conv2d(frameSet,  24, 5, strides=(2, 2), padding='same',
+                                        activation=tf.nn.relu,
+                                        kernel_initializer = weight_init,
+                                        biasInitializer = biasInitializer,
+                                        name = 't1_course_l1', reuse=reuse) 
+        t1_course_l2 = tf.layers.conv2d(t1_course_l1,  24, 5, padding='same',
+                                        activation=tf.nn.relu,
+                                        kernel_initializer = weight_init,
+                                        biasInitializer = biasInitializer,
+                                        name = 't1_course_l2', reuse=reuse)
+        t1_course_l3 = tf.layers.conv2d(t1_course_l2,  24, 5, strides=(2, 2), padding='same',
+                                        activation=tf.nn.relu,
+                                        kernel_initializer = weight_init,
+                                        biasInitializer = biasInitializer,
+                                        name = 't1_course_l3', reuse=reuse)
+        t1_course_l4 = tf.layers.conv2d(t1_course_l3,  24, 3, padding='same',
+                                        activation=tf.nn.relu,
+                                        kernel_initializer = weight_init,
+                                        biasInitializer = biasInitializer,
+                                        name = 't1_course_l4', reuse=reuse)
+        t1_course_l5 = tf.layers.conv2d(t1_course_l4,  32, 3, padding='same',
+                                        activation=tf.nn.tanh,
+                                        kernel_initializer = weight_init,
+                                        biasInitializer = biasInitializer,
+                                        name = 't1_course_l5', reuse=reuse)
         
         # Output shape: (-1, l, w, 2)
-        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_course_out = tf.layers.conv2d(t1_course_l5, 2, 1, strides=(1, 1), padding='same',
+                                         activation=tf.nn.tanh,
+                                         kernel_initializer = weight_init,
+                                         biasInitializer = biasInitializer,
+                                         name = 't1_course_out', reuse=reuse)
         
         # Course Warping
-        
         # Gets target image to be warped
-        targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
+        targetImg = frameSet[:, :, :, 0:self.c_dim]
         
         # Generates tensor of dimension [-1, h, w, 3+2]
         t1_course_warp_in = tf.concat([targetImg, t1_course_out], 3)
         
         # Applies warping using 2D convolution layer to estimate image at time t=t
         # Kernel size 3 is used to estimate dI/dx and dI/dy from neighbouring pixel values
-        t1_course_warp = tf.layers.conv2d(t1_course_warp_in,  3, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_course_warp = tf.layers.conv2d(t1_course_warp_in,  3, 3, padding='same',
+                                          activation=tf.nn.tanh,
+                                          kernel_initializer = weight_init,
+                                          biasInitializer = biasInitializer,
+                                          name = 't1_course_warp', reuse=reuse)
         
         # Resizes using billinear interpolation
         # Output shape: (batchSize, h, w, c_dim)
         if self.is_train:
-            t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.image_size, self.image_size) )
+            t1_course_image_out = tf.image.resize_images(t1_course_warp,
+                                                         (self.image_size,
+                                                          self.image_size) )
         else:
-            t1_course_image_out = tf.image.resize_images(t1_course_warp, (self.h, self.w) )
+            t1_course_image_out = tf.image.resize_images(t1_course_warp,
+                                                         (self.h, self.w) )
         
-        # Fine flow
+        # Fine flow 
+        # Combines images input, course flow estimation, 
+        # and course image estimation along dimension 3
+        t1_fine_in = tf.concat([frameSet, t1_course_out,
+                                t1_course_image_out], 3)
         
-        # Combines images input, course flow estimation, and course image estimation along dimension 3
-        t1_fine_in = tf.concat([frameSet, t1_course_out, t1_course_image_out], 3)
+        t1_fine_l1 = tf.layers.conv2d(t1_fine_in,  24, 5, strides=(2, 2), padding='same',
+                                      activation=tf.nn.relu,
+                                      kernel_initializer = weight_init,
+                                      biasInitializer = biasInitializer,
+                                      name = 't1_fine_l1', reuse=reuse) 
         
-        t1_fine_l1 = tf.layers.conv2d(t1_fine_in,  24, 5, strides=(2, 2), padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer) 
-        t1_fine_l2 = tf.layers.conv2d(t1_fine_l1,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
-        t1_fine_l3 = tf.layers.conv2d(t1_fine_l2,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
-        t1_fine_l4 = tf.layers.conv2d(t1_fine_l3,  24, 3, padding='same', activation=tf.nn.relu, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
-        t1_fine_l5 = tf.layers.conv2d(t1_fine_l4,  8, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_fine_l2 = tf.layers.conv2d(t1_fine_l1,  24, 3, padding='same',
+                                      activation=tf.nn.relu,
+                                      kernel_initializer = weight_init,
+                                      biasInitializer = biasInitializer,
+                                      name = 't1_fine_l2', reuse=reuse)
+        
+        t1_fine_l3 = tf.layers.conv2d(t1_fine_l2,  24, 3, padding='same',
+                                      activation=tf.nn.relu,
+                                      kernel_initializer = weight_init,
+                                      biasInitializer = biasInitializer,
+                                      name = 't1_fine_l3', reuse=reuse)
+        
+        t1_fine_l4 = tf.layers.conv2d(t1_fine_l3,  24, 3, padding='same',
+                                      activation=tf.nn.relu,
+                                      kernel_initializer = weight_init,
+                                      biasInitializer = biasInitializer,
+                                      name = 't1_fine_l4', reuse=reuse)
+        
+        t1_fine_l5 = tf.layers.conv2d(t1_fine_l4,  8, 3, padding='same',
+                                      activation=tf.nn.tanh,
+                                      kernel_initializer = weight_init,
+                                      biasInitializer = biasInitializer,
+                                      name = 't1_fine_l5', reuse=reuse)
         
         # Output shape(-1, l, w, 2)
-        t1_fine_out = tf.layers.conv2d(t1_fine_l5, 2, 1, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_fine_out = tf.layers.conv2d(t1_fine_l5, 2, 1, padding='same',
+                                       activation=tf.nn.tanh,
+                                       kernel_initializer = weight_init,
+                                       biasInitializer = biasInitializer,
+                                       name = 't1_fine_out', reuse=reuse)
         
         # Combines fine flow and course flow estimates
         # Output shape(-1, l, w, 2)
         t1_combined_flow = t1_course_out + t1_fine_out
         
         # Fine Warping
-        
         # Concatnates target image and combined flow channels
         t1_fine_warp_in = tf.concat([targetImg, t1_combined_flow], 3)
         
         # Applies warping using 2D convolution layer to estimate image at time t=t
         # Kernel size 3 is used to estimate dI/dx and dI/dy from neighbouring pixel values
         # Output shape: (batchSize, h, w, c_dim)
-        t1_fine_warp = tf.layers.conv2d(t1_fine_warp_in, 3, 3, padding='same', activation=tf.nn.tanh, kernel_initializer = weight_init,  biasInitializer = biasInitializer)
+        t1_fine_warp = tf.layers.conv2d(t1_fine_warp_in, 3, 3, padding='same',
+                                        activation=tf.nn.tanh, 
+                                        kernel_initializer = weight_init,
+                                        biasInitializer = biasInitializer,
+                                        name = 't1_fine_warp', reuse=reuse)
         
         # Resizes using billinear interpolation
         # Output shape: (batchSize, h, w, c_dim)
         if self.is_train:
-            t1_image_out = tf.image.resize_images(t1_fine_warp, (self.image_size, self.image_size))
+            t1_image_out = tf.image.resize_images(t1_fine_warp,
+                                                  (self.image_size, self.image_size))
         else:
-            t1_image_out = tf.image.resize_images(t1_fine_warp, (self.h, self.w))
+            t1_image_out = tf.image.resize_images(t1_fine_warp,
+                                                  (self.h, self.w))
             
         return(t1_image_out)
         
     def model(self):
         
-        # Produces early fusion output from images at time t and t-1
-        #fusionA = tf.nn.relu(tf.nn.conv2d(self.imgA, self.weights['EarlyFusionAw'], strides=[1,1,1,1], padding='SAME') + self.biases['EarlyFusionAb'])
-        
-        # Produces early fusion output from images at time t and t+1
-        #fusionB = tf.nn.relu(tf.nn.conv2d(self.imgB, self.weights['EarlyFusionBw'], strides=[1,1,1,1], padding='SAME') + self.biases['EarlyFusionBb'])
-        
-        # Reshapes prev and next with current frame input sets 
         
        # Generates motion compensated images from previous and next images
        # using 2 spatial transformers
-       imgPrev = self.spatial_transformer(self.images_prev_curr)
-       imgNext = self.spatial_transformer(self.images_next_curr)
-       
-       targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
-       
-       # Concatenates motion compensated neighbouring frames and target frame
-       imgSet = tf.concat([imgPrev, targetImg, imgNext], 3)
+           
+       # Initializes spatial transformer if training mode is 0 or 2
+       if self.train_mode == 2:
+           imgPrev = self.spatial_transformer(self.images_prev_curr, reuse = True)
+           imgNext = self.spatial_transformer(self.images_next_curr, reuse = True)
+               
+           targetImg = self.images.next_curr[:, :, :, 0:self.c_dim]
+           imgSet = tf.concat([imgPrev, targetImg, imgNext], 3)
+       elif self.train_mode == 0:
+           motionCompensatedImgOut = self.spatial_transformer(self.images_curr_prev, reuse = False)
+       else:
+           imgSet = self.images_in
        
        wInitializer1 = tf.random_normal_initializer(stddev=np.sqrt(2.0/25/3))
        wInitializer2 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/64))
        wInitializer3 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/32))
        biasInitializer = tf.zeros_initializer()
        
-       EarlyFusion =  tf.layers.conv2d(imgSet,  3, 3, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
+       # Builds subpixel net if train mode is 1 or 2
+       if self.train_mode == 1 or self.train_mode == 2:
+           EarlyFusion =  tf.layers.conv2d(imgSet,  3, 3, padding='same',
+                                           activation=tf.nn.relu,
+                                           kernel_initializer = wInitializer1,
+                                           biasInitializer = biasInitializer)
+           
+           conv1 = tf.layers.conv2d(EarlyFusion,  64, 5, padding='same',
+                                    activation=tf.nn.relu,
+                                    kernel_initializer = wInitializer1,
+                                    biasInitializer = biasInitializer)
+           conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same',
+                                    activation=tf.nn.relu,
+                                    kernel_initializer = wInitializer2,
+                                    biasInitializer = biasInitializer)
+           conv3 = tf.layers.conv2d(conv2,
+                                    self.c_dim * self.scale * self.scale,
+                                    3, padding='same', activation=None,
+                                    kernel_initializer = wInitializer3,
+                                    biasInitializer = biasInitializer)
+
+           ps = self.PS(conv3, self.scale)
+           
+       if self.train_mode == 0:
+           return motionCompensatedImgOut
+       else:
+           return tf.nn.tanh(ps)
        
-       conv1 = tf.layers.conv2d(EarlyFusion,  64, 5, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer1,  biasInitializer = biasInitializer)
-       conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same', activation=tf.nn.relu, kernel_initializer = wInitializer2,  biasInitializer = biasInitializer)
-       conv3 = tf.layers.conv2d(conv2,  self.c_dim * self.scale * self.scale, 3, padding='same', activation=None, kernel_initializer = wInitializer3,  biasInitializer = biasInitializer)
-       #conv1 = tf.nn.relu(tf.nn.conv2d(self.images, self.weights['w1'], strides=[1,1,1,1], padding='SAME') + self.biases['b1'])
-       #conv2 = tf.nn.relu(tf.nn.conv2d(conv1, self.weights['w2'], strides=[1,1,1,1], padding='SAME') + self.biases['b2'])
-       #conv3 = tf.nn.conv2d(conv2, self.weights['w3'], strides=[1,1,1,1], padding='SAME') + self.biases['b3'] # This layer don't need ReLU
-       ps = self.PS(conv3, self.scale)
-       return tf.nn.tanh(ps)
 
     #NOTE: train with batch size 
     def _phase_shift(self, I, r):
@@ -263,6 +426,7 @@ class ESPCN(object):
 
         # Stochastic gradient descent with the standard backpropagation
         self.train_op = tf.train.AdamOptimizer(learning_rate=config.learning_rate).minimize(self.loss)
+        
         self.sess.run(tf.global_variables_initializer())
 
         counter = 0

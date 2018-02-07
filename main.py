@@ -24,6 +24,7 @@ def main(_): #?
         espcn = ESPCN(sess,
                       image_size = FLAGS.image_size,
                       is_train = FLAGS.is_train,
+                      train_mode = FLAGS.train_mode,
                       scale = FLAGS.scale,
                       c_dim = FLAGS.c_dim,
                       batch_size = FLAGS.batch_size,
