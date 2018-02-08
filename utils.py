@@ -67,7 +67,7 @@ def preprocess(path ,scale = 3):
 
     return input_, label_
 
-def prepare_data(dataset="Train",Input_img=""):
+def prepare_data(dataset="Train", config=None):
     """
         Args:
             dataset: choose train dataset or test dataset
@@ -88,23 +88,28 @@ def prepare_data(dataset="Train",Input_img=""):
                     data = glob.glob(os.path.join(dataFolderDir, "*.bmp")) # make set of all dataset file path
                     dataPaths.append(data)
     else:
-        '''if Input_img !="":
-            data = [os.path.join(os.getcwd(),Input_img)]'''
+            
         
-        data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode1")
-        data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
-        dataPaths.append(data)
+        if config.train_mode == 0:
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode0")
+            data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
+            dataPaths.append(data)
+        elif config.train_mode == 1:
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode1")
+            data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
+            dataPaths.append(data)
+            
     print(dataPaths)
     return dataPaths
 
-def load_data(is_train, train_mode, test_img):
+def load_data(is_train, train_mode, config):
     if is_train:
-        data = prepare_data(dataset="Train")
+        data = prepare_data(dataset="Train", config = config )
     else:
         '''if test_img != "":
             return prepare_data(dataset="Test",Input_img=test_img)'''
         
-        data = prepare_data(dataset="Test")
+        data = prepare_data(dataset="Test", config = config)
     return data
 
 def make_sub_data(data, config):
@@ -139,7 +144,12 @@ def make_sub_data(data, config):
                     input_ = imread(lsts[1])/255.0
                     inputNext_ = imread(lsts[2])/255.0
                     input_data = np.dstack((input_, inputNext_))
-                              
+                elif config.train_mode == 1:
+                    inputPrev_ = imread(lsts[0])/255.0
+                    input_ = imread(lsts[1])/255.0
+                    inputNext_ = imread(lsts[2])/255.0
+                    input_data = input_
+                    
                 sub_input_sequence.append(input_data)
                 return sub_input_sequence, sub_label_sequence
     
@@ -170,8 +180,9 @@ def make_sub_data(data, config):
                         # Prepares sub_input_data of dimension [l x w x 2*c_dim]
                         sub_input_data = np.array(sub_curr_prev)
                     elif config.train_mode == 1:
-                        sub_curr_prev_next = np.dstack((sub_input, sub_input_prev, sub_input_next))
-                        sub_input_data = np.array(sub_curr_prev_next)
+                        
+                        # Obtains sub images for training subpixel convnet
+                        sub_input_data = np.array(sub_input)
                     else:
                         
                         # Prepares subframe tensors curr-prev frames and curr-next frames
@@ -254,7 +265,7 @@ def input_setup(config):
     """
 
     # Load data path, if is_train False, get test data
-    data = load_data(config.is_train, config.train_mode, None)
+    data = load_data(config.is_train, config.train_mode, config)
 
     # Make sub_input and sub_label, if is_train false more return nx, ny
     sub_input_sequence, sub_label_sequence = make_sub_data(data, config)
@@ -262,7 +273,7 @@ def input_setup(config):
     # Make list to numpy array. With this transform
     # training mode = 0 => [?, size, size, 6]
     # training mode = 2 => [?, 2, size, size, 3]
-    # training mode = 1 => [? size, size, 9]
+    # training mode = 1 => [? size, size, 3]
     arrinput = np.asarray(sub_input_sequence) 
     
     # [?, size , size, 3]

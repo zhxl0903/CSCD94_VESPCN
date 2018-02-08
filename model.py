@@ -27,6 +27,7 @@ class ESPCN(object):
                  batch_size,
                  c_dim,
                  test_img,
+                 config
                  ):
         
         self.sess = sess
@@ -37,6 +38,7 @@ class ESPCN(object):
         self.train_mode = train_mode
         self.batch_size = batch_size
         self.test_img = test_img
+        self.config = config
         self.build_model()
 
     def build_model(self):
@@ -63,7 +65,7 @@ class ESPCN(object):
                 self.images_in = tf.placeholder(tf.float32, [None,
                                                              self.image_size,
                                                              self.image_size,
-                                                             3*self.c_dim],
+                                                             self.c_dim],
                                                             name='image_in')
                 self.labels = tf.placeholder(tf.float32, 
                                              [None,
@@ -95,7 +97,10 @@ class ESPCN(object):
                 Because the test need to put image to model,
                 so here we don't need do preprocess, so we set input as the same with preprocess output
             '''
-            data = load_data(self.is_train, self.train_mode, None)
+            
+            # Computes shape of placeholder for image feed from sample image
+            # loaded
+            data = load_data(self.is_train, self.train_mode, self.config)
             input_ = imread(data[0][0])       
             self.h, self.w, c = input_.shape
             
@@ -121,7 +126,7 @@ class ESPCN(object):
                                                 [None,
                                                  self.h,
                                                  self.w,
-                                                 3*self.c_dim],
+                                                 self.c_dim],
                                                  name='images_in')
                 self.labels = tf.placeholder(tf.float32,
                                              [None,
@@ -344,26 +349,41 @@ class ESPCN(object):
        wInitializer3 = tf.random_normal_initializer(stddev=np.sqrt(2.0/9/32))
        biasInitializer = tf.zeros_initializer()
        
-       # Builds subpixel net if train mode is 1 or 2
-       if self.train_mode == 1 or self.train_mode == 2:
+       
+       if self.train_mode == 2:
+           
+           # Connects early fusion network with spatial transformer and subpixel convnet
            EarlyFusion =  tf.layers.conv2d(imgSet,  3, 3, padding='same',
                                            activation=tf.nn.relu,
                                            kernel_initializer = wInitializer1,
-                                           bias_initializer = biasInitializer)
+                                           bias_initializer = biasInitializer,
+                                           name = 'EF1')
+           subPixelIn = EarlyFusion
+       elif self.train_mode == 1:
            
-           conv1 = tf.layers.conv2d(EarlyFusion,  64, 5, padding='same',
+           # Connects subpixel convnet to placeholder for feeding single images
+           subPixelIn = imgSet
+           
+       # Builds subpixel net if train mode is 1 or 2
+       if self.train_mode == 1 or self.train_mode == 2:
+          
+           conv1 = tf.layers.conv2d(subPixelIn,  64, 5, padding='same',
                                     activation=tf.nn.relu,
                                     kernel_initializer = wInitializer1,
-                                    bias_initializer = biasInitializer)
+                                    bias_initializer = biasInitializer,
+                                    name = 'subPixelL1')
            conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same',
+                                    
                                     activation=tf.nn.relu,
                                     kernel_initializer = wInitializer2,
-                                    bias_initializer = biasInitializer)
+                                    bias_initializer = biasInitializer,
+                                    name = 'subPixelL2')
            conv3 = tf.layers.conv2d(conv2,
                                     self.c_dim * self.scale * self.scale,
                                     3, padding='same', activation=None,
                                     kernel_initializer = wInitializer3,
-                                    bias_initializer = biasInitializer)
+                                    bias_initializer = biasInitializer,
+                                    name = 'subPixelL3')
 
            ps = self.PS(conv3, self.scale)
            
@@ -460,7 +480,11 @@ class ESPCN(object):
                     counter += 1
                     
                     if(config.train_mode == 0):
-                        _, err = self.sess.run([self.train_op, self.loss], feed_dict={self.images_curr_prev: batch_images, self.labels: batch_labels})
+                        _, err = self.sess.run([self.train_op, self.loss],
+                                               feed_dict={self.images_curr_prev: batch_images, self.labels: batch_labels})
+                    elif(config.train_mode == 1):
+                        _, err = self.sess.run([self.train_op, self.loss],
+                                               feed_dict={self.images_in: batch_images, self.labels: batch_labels})
 
                     if counter % 10 == 0:
                         print("Epoch: ", (ep+1), " Step: ", counter, " Time: ", (time.time()-time_), " Loss: ", err)
@@ -470,11 +494,18 @@ class ESPCN(object):
         # Test
         else:
             print("Now Start Testing...")
-            result = self.pred.eval({self.images_curr_prev: input_[0].reshape(1, self.h, self.w, 2*self.c_dim)})
-            original = input_[0].reshape(1, self.h, self.w, 2*self.c_dim)
-            original = original[0, :, :, 0:self.c_dim]
-            print(np.sum(np.square(original-result), axis=None))
-            x = np.squeeze(result)
+            
+            if (self.config.train_mode==0):
+                result = self.pred.eval({self.images_curr_prev: input_[0].reshape(1, self.h, self.w, 2*self.c_dim)})
+                original = input_[0].reshape(1, self.h, self.w, 2*self.c_dim)
+                original = original[0, :, :, 0:self.c_dim]
+                print(np.sum(np.square(original-result), axis=None))
+                x = np.squeeze(result)
+                
+            elif self.config.train_mode == 1:
+                result = self.pred.eval({self.images_in: input_[0].reshape(1, self.h, self.w, self.c_dim)})
+                x = np.squeeze(result)
+                
             checkimage(x)
             print(x.shape)
             imsave(x, config.result_dir+'/result.png', config)

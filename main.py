@@ -29,6 +29,7 @@ def main(_): #?
                       c_dim = FLAGS.c_dim,
                       batch_size = FLAGS.batch_size,
                       test_img = FLAGS.test_img,
+                      config=config
                       )
         
         
