@@ -67,7 +67,7 @@ def preprocess(path ,scale = 3):
 
     return input_, label_
 
-def prepare_data(dataset="Train", config=None):
+def prepare_data(train_mode, dataset="Train"):
     """
         Args:
             dataset: choose train dataset or test dataset
@@ -90,11 +90,11 @@ def prepare_data(dataset="Train", config=None):
     else:
             
         
-        if config.train_mode == 0:
+        if train_mode == 0:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode0")
             data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
             dataPaths.append(data)
-        elif config.train_mode == 1:
+        elif train_mode == 1:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode1")
             data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
             dataPaths.append(data)
@@ -102,14 +102,14 @@ def prepare_data(dataset="Train", config=None):
     print(dataPaths)
     return dataPaths
 
-def load_data(is_train, train_mode, config):
+def load_data(is_train, train_mode):
     if is_train:
-        data = prepare_data(dataset="Train", config = config )
+        data = prepare_data(train_mode = train_mode, dataset="Train")
     else:
         '''if test_img != "":
             return prepare_data(dataset="Test",Input_img=test_img)'''
         
-        data = prepare_data(dataset="Test", config = config)
+        data = prepare_data(train_mode = train_mode, dataset="Test")
     return data
 
 def make_sub_data(data, config):
@@ -121,6 +121,25 @@ def make_sub_data(data, config):
     """
     sub_input_sequence = []
     sub_label_sequence = []
+    
+    # Returns test data if we are not training
+    if not config.is_train:
+        for lsts in data:
+            for i in range(0, len(lsts)-1):
+                input_data = []
+                if config.train_mode == 0:
+                    input_ = imread(lsts[i])/255.0
+                    inputNext_ = imread(lsts[i+1])/255.0
+                    input_data = np.dstack((input_, inputNext_))
+                elif config.train_mode == 1:
+                    inputPrev_ = imread(lsts[0])/255.0
+                    input_ = imread(lsts[1])/255.0
+                    inputNext_ = imread(lsts[2])/255.0
+                    input_data = input_
+                        
+                sub_input_sequence.append(input_data)
+        return sub_input_sequence, sub_label_sequence
+        
     for lsts in data:
         for i in range(1, len(lsts)-1):
             
@@ -135,23 +154,7 @@ def make_sub_data(data, config):
             else:
                 h, w = input_.shape # is grayscale
             
-            # Returns test data if we are not training
-            if not config.is_train:
-                
-                input_data = []
-                if config.train_mode == 0:
-                    inputPrev_ = imread(lsts[0])/255.0
-                    input_ = imread(lsts[1])/255.0
-                    inputNext_ = imread(lsts[2])/255.0
-                    input_data = np.dstack((input_, inputNext_))
-                elif config.train_mode == 1:
-                    inputPrev_ = imread(lsts[0])/255.0
-                    input_ = imread(lsts[1])/255.0
-                    inputNext_ = imread(lsts[2])/255.0
-                    input_data = input_
-                    
-                sub_input_sequence.append(input_data)
-                return sub_input_sequence, sub_label_sequence
+            
     
             # NOTE: make subimage of LR and HR
             # Input 
@@ -265,7 +268,7 @@ def input_setup(config):
     """
 
     # Load data path, if is_train False, get test data
-    data = load_data(config.is_train, config.train_mode, config)
+    data = load_data(config.is_train, config.train_mode)
 
     # Make sub_input and sub_label, if is_train false more return nx, ny
     sub_input_sequence, sub_label_sequence = make_sub_data(data, config)
