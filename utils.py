@@ -27,7 +27,8 @@ def checkimage(image):
 
 def modcrop(img, scale =3):
     """
-        To scale down and up the original image, first thing to do is to have no remainder while scaling operation.
+        To scale down and up the original image, first thing to
+        do is to have no remainder while scaling operation.
     """
     # Check the image is grayscale
     if len(img.shape) ==3:
@@ -58,7 +59,9 @@ def preprocess(path ,scale = 3):
 
     label_ = modcrop(img, scale)
     
-    input_ = cv2.resize(label_,None,fx = 1.0/scale ,fy = 1.0/scale, interpolation = cv2.INTER_CUBIC) # Resize by scaling factor
+    # Resize by scaling factor
+    input_ = cv2.resize(label_,None,fx = 1.0/scale ,fy = 1.0/scale,
+                        interpolation = cv2.INTER_CUBIC) 
 
     kernel_size = (7, 7);
     sigma = 3.0;
@@ -71,7 +74,8 @@ def prepare_data(train_mode, dataset="Train"):
     """
         Args:
             dataset: choose train dataset or test dataset
-            For train dataset, output data would be ['.../t1.bmp', '.../t2.bmp',..., 't99.bmp']
+            For train dataset, output data would be ['.../t1.bmp', 
+            '.../t2.bmp',..., 't99.bmp']
     """
     
     # Defines list of data path lists for different folders of training data
@@ -79,24 +83,34 @@ def prepare_data(train_mode, dataset="Train"):
     
     # If mode is train, dataPaths from each folder in Train directory are
     # stored into a list which is then appended to dataPaths
+    # Join the Train dir to current directory
     if dataset == "Train":
-        data_dir = os.path.join(os.getcwd(), dataset) # Join the Train dir to current directory
+        data_dir = os.path.join(os.getcwd(), dataset) 
         for root, dirs, files in os.walk(data_dir):
             if dirs != []:
                 for folder in dirs:
-                    dataFolderDir = os.path.join(data_dir, folder)             
-                    data = glob.glob(os.path.join(dataFolderDir, "*.bmp")) # make set of all dataset file path
+                    dataFolderDir = os.path.join(data_dir, folder)        
+                    
+                    # make set of all dataset file path
+                    data = glob.glob(os.path.join(dataFolderDir, "*.bmp"))
+                    data.sort()
                     dataPaths.append(data)
     else:
             
         
         if train_mode == 0:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode0")
-            data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
+            
+            # make set of all dataset file path
+            data = glob.glob(os.path.join(data_dir, "*.bmp"))
+            data.sort()
             dataPaths.append(data)
         elif train_mode == 1:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode1")
-            data = glob.glob(os.path.join(data_dir, "*.bmp")) # make set of all dataset file path
+            
+            # make set of all dataset file path
+            data = glob.glob(os.path.join(data_dir, "*.bmp"))
+            data.sort()
             dataPaths.append(data)
             
     print(dataPaths)
@@ -128,6 +142,8 @@ def make_sub_data(data, config):
             for i in range(0, len(lsts)-1):
                 input_data = []
                 if config.train_mode == 0:
+                    
+                    # Prepares test frame set using frame i and frame i+1
                     input_ = imread(lsts[i])/255.0
                     inputNext_ = imread(lsts[i+1])/255.0
                     input_data = np.dstack((input_, inputNext_))
@@ -145,7 +161,8 @@ def make_sub_data(data, config):
             
             # Performs resize of 3 neighbouring images using bicubic
             # Labels are generated for current frame image
-            input_, label_, = preprocess(lsts[i], config.scale) # do bicbuic
+            # do bicbuic downscaling
+            input_, label_, = preprocess(lsts[i], config.scale) 
             input_prev, _ = preprocess(lsts[i-1], config.scale)
             input_next, _ = preprocess(lsts[i+1], config.scale)
             
@@ -153,22 +170,28 @@ def make_sub_data(data, config):
                 h, w, c = input_.shape
             else:
                 h, w = input_.shape # is grayscale
-            
-            
-    
+                
             # NOTE: make subimage of LR and HR
             # Input 
             for x in range(0, h - config.image_size + 1, config.stride):
                 for y in range(0, w - config.image_size + 1, config.stride):
-    
-                    sub_input = input_[x: x + config.image_size, y: y + config.image_size] # 17 * 17
-                    sub_input_prev = input_prev[x: x + config.image_size, y: y + config.image_size]
-                    sub_input_next = input_next[x: x + config.image_size, y: y + config.image_size]
+                    sub_input = input_[x: x + config.image_size,
+                                       y: y + config.image_size]
+                    sub_input_prev = input_prev[x: x + config.image_size,
+                                                y: y + config.image_size]
+                    sub_input_next = input_next[x: x + config.image_size,
+                                                y: y + config.image_size]
                     
                     # Reshape the subinput and sublabel
-                    sub_input = sub_input.reshape([config.image_size, config.image_size, config.c_dim])
-                    sub_input_prev = sub_input_prev.reshape([config.image_size, config.image_size, config.c_dim])
-                    sub_input_next = sub_input_next.reshape([config.image_size, config.image_size, config.c_dim])
+                    sub_input = sub_input.reshape([config.image_size,
+                                                   config.image_size,
+                                                   config.c_dim])
+                    sub_input_prev = sub_input_prev.reshape([config.image_size,
+                                                             config.image_size,
+                                                             config.c_dim])
+                    sub_input_next = sub_input_next.reshape([config.image_size,
+                                                             config.image_size, 
+                                                             config.c_dim])
                     
                     # Normialize
                     sub_input =  sub_input / 255.0
@@ -194,19 +217,30 @@ def make_sub_data(data, config):
                         sub_curr_next = np.dstack((sub_input, sub_input_next))
                         
                         # Prepares sub_input_data of dimension [2 x l x w x 2*c_dim]
-                        sub_input_data = np.array([sub_curr_prev, sub_curr_next])
+                        sub_input_data = np.array([sub_curr_prev,
+                                                   sub_curr_next])
                     
                     # Add to sequence
                     sub_input_sequence.append(sub_input_data)
     
             # Label (the time of scale)
             if config.train_mode != 0:
-                for x in range(0, h * config.scale - config.image_size * config.scale + 1, config.stride * config.scale):
-                    for y in range(0, w * config.scale - config.image_size * config.scale + 1, config.stride * config.scale):
+                for x in range(0,
+                               h * config.scale -
+                               config.image_size * config.scale + 1,
+                               config.stride * config.scale):
+                    for y in range(0,
+                                   w * config.scale -
+                                   config.image_size * config.scale + 1,
+                                   config.stride * config.scale):
                         
-                        # Sets label to piece from original image if train_mode is 1 or 2
-                        sub_label = label_[x: x + config.image_size * config.scale, y: y + config.image_size * config.scale] # 17r * 17r
-                        sub_label = sub_label.reshape([config.image_size * config.scale , config.image_size * config.scale, config.c_dim])
+                        # Sets label to piece from original image 
+                        # if train_mode is 1 or 2
+                        sub_label = label_[x: x + config.image_size * config.scale,
+                                           y: y + config.image_size * config.scale]
+                        sub_label = sub_label.reshape([config.image_size * config.scale,
+                                                       config.image_size * config.scale,
+                                                       config.c_dim])
                         
                         # Normialize
                         sub_label =  sub_label / 255.0
@@ -218,8 +252,11 @@ def make_sub_data(data, config):
                     for y in range(0, w - config.image_size + 1, config.stride):
                         
                         # Sets target image to label if train mode is 0
-                        sub_label = input_[x: x + config.image_size, y: y + config.image_size]
-                        sub_label = sub_label.reshape([config.image_size , config.image_size, config.c_dim])
+                        sub_label = input_[x: x + config.image_size,
+                                           y: y + config.image_size]
+                        sub_label = sub_label.reshape([config.image_size ,
+                                                       config.image_size,
+                                                       config.c_dim])
                         
                         # Normialize
                         sub_label =  sub_label / 255.0
