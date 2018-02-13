@@ -376,13 +376,12 @@ class ESPCN(object):
        # Builds subpixel net if train mode is 1 or 2
        if self.train_mode == 1 or self.train_mode == 2:
           
-           conv1 = tf.layers.conv2d(subPixelIn,  64, 5, padding='same',
+           conv1 = tf.layers.conv2d(subPixelIn,  64, 3, padding='same',
                                     activation=tf.nn.relu,
                                     kernel_initializer = wInitializer1,
                                     bias_initializer = biasInitializer,
                                     name = 'subPixelL1')
            conv2 = tf.layers.conv2d(conv1,  32, 3, padding='same',
-                                    
                                     activation=tf.nn.relu,
                                     kernel_initializer = wInitializer2,
                                     bias_initializer = biasInitializer,
@@ -557,10 +556,13 @@ class ESPCN(object):
                     imsave(x, config.result_dir+'/result'+str(i)+'.png', config)
                 
             elif self.train_mode == 1:
-                result = self.pred.eval({self.images_in: input_[0].reshape(1,
-                                         self.h, self.w, self.c_dim)})
-                x = np.squeeze(result)
-                
+                for i in range(len(input_)):
+                    result = self.pred.eval({self.images_in: input_[i].reshape(1,
+                                             self.h, self.w, self.c_dim)})
+    
+                    x = np.squeeze(result)
+                    print('Shape of output image: ', x.shape)
+                    imsave(x, config.result_dir+'/result'+str(i)+'.png', config)
             
             
     def load(self, checkpoint_dir):
@@ -570,8 +572,15 @@ class ESPCN(object):
         
         print("\nReading Checkpoints.....\n\n")
         
-        # gives the model name by label_size
-        model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
+        
+        model_dir = ""
+        
+        # gives model name training data size and scale
+        if(self.train_mode == 0):
+            model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
+        elif(self.train_mode == 1):
+            model_dir = "%s_%s_%s" % ("espcn_subpixel", self.image_size,self.scale)
+            
         checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
         
@@ -589,8 +598,17 @@ class ESPCN(object):
             To save the checkpoint use to test or pretrain
         """
         
-        model_name = "ESPCN.model"
-        model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
+        model_name = ""
+        model_dir = ""
+        
+        # Gives model name by training data size and scale
+        if (self.train_mode == 0):
+            model_name = "ESPCN.model"
+            model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
+        elif (self.train_mode == 1):
+            model_name = "ESPCN_Subpixel.model"
+            model_dir = "%s_%s_%s" % ("espcn_subpixel", self.image_size,self.scale)
+            
         checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
 
         if not os.path.exists(checkpoint_dir):

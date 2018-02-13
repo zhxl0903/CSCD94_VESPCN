@@ -6,7 +6,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_integer("epoch", 400, "Number of epoch")
 flags.DEFINE_integer("image_size", 32, "The size of image input")
 flags.DEFINE_integer("c_dim", 3, "The size of channel")
-flags.DEFINE_boolean("is_train", True, "if the train")
+flags.DEFINE_boolean("is_train", True, "if training")
 flags.DEFINE_integer("train_mode", 0, "0 spatial transformer 1 subpixel net 2 training in unison")
 flags.DEFINE_integer("scale", 3, "the size of scale factor for preprocessing input image")
 flags.DEFINE_integer("stride", 32, "the size of stride")

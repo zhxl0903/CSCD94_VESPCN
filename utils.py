@@ -139,32 +139,48 @@ def make_sub_data(data, config):
     # Returns test data if we are not training
     if not config.is_train:
         for lsts in data:
-            for i in range(0, len(lsts)-1):
-                input_data = []
-                if config.train_mode == 0:
-                    
-                    # Prepares test frame set using frame i and frame i+1
-                    input_ = imread(lsts[i])/255.0
-                    inputNext_ = imread(lsts[i+1])/255.0
-                    input_data = np.dstack((input_, inputNext_))
-                elif config.train_mode == 1:
-                    inputPrev_ = imread(lsts[0])/255.0
-                    input_ = imread(lsts[1])/255.0
-                    inputNext_ = imread(lsts[2])/255.0
-                    input_data = input_
+             
+             # Sets default upper bound for image processing loop for list lsts
+             bound = len(lsts) - 1
+             
+             
+                 
+             # Loops over all images in lsts
+             for i in range(0, bound):
+                 input_data = []
+                 if config.train_mode == 0:
                         
-                sub_input_sequence.append(input_data)
+                     # Prepares test frame set using frame i and frame i+1
+                     input_ = imread(lsts[i]) / 255.0
+                     inputNext_ = imread(lsts[i+1]) / 255.0
+                     input_data = np.dstack((input_, inputNext_))
+                 elif config.train_mode == 1:
+                        
+                     # Prepares test frame set using frame i
+                     input_ = imread(lsts[i]) / 255.0
+                     input_data = input_
+                            
+                 sub_input_sequence.append(input_data)
         return sub_input_sequence, sub_label_sequence
         
     for lsts in data:
-        for i in range(1, len(lsts)-1):
+        
+        # Sets default upper bound for image processing loop for list lsts
+        bound = len(lsts) - 1
+        
+        # Sets bound to loop over all images in data if train mode is 1
+        if(config.train_mode == 1):
+            bound = len(lsts)
+        for i in range(1, bound):
             
             # Performs resize of 3 neighbouring images using bicubic
             # Labels are generated for current frame image
             # do bicbuic downscaling
             input_, label_, = preprocess(lsts[i], config.scale) 
-            input_prev, _ = preprocess(lsts[i-1], config.scale)
-            input_next, _ = preprocess(lsts[i+1], config.scale)
+            
+            if (config.train_mode == 0 or config.train_mode == 2):
+                input_prev, _ = preprocess(lsts[i-1], config.scale)
+                input_next, _ = preprocess(lsts[i+1], config.scale)
             
             if len(input_.shape) == 3: # is color
                 h, w, c = input_.shape
@@ -175,28 +191,40 @@ def make_sub_data(data, config):
             # Input 
             for x in range(0, h - config.image_size + 1, config.stride):
                 for y in range(0, w - config.image_size + 1, config.stride):
+                    
+                    
+                    # Retrieves sub frames from prev and next frames if
+                    # train mode is 0 or 2
+                    if (config.train_mode == 0 or config.train_mode == 2):
+                        sub_input_prev = input_prev[x: x + config.image_size,
+                                                    y: y + config.image_size]
+                        sub_input_next = input_next[x: x + config.image_size,
+                                                    y: y + config.image_size]
+    
+                        # Reshapes subframes from prev and next frames if
+                        # train_mode is 0 or 2
+                        sub_input_prev = sub_input_prev.reshape([config.image_size,
+                                                                 config.image_size,
+                                                                 config.c_dim])
+                        sub_input_next = sub_input_next.reshape([config.image_size,
+                                                                 config.image_size, 
+                                                                 config.c_dim])
+                        
+                        # Normalizes sub input frames
+                        sub_input_prev = sub_input_prev / 255.0
+                        sub_input_next = sub_input_next / 255.0
+                    
+                    # Retrieves sub frames from current frame
                     sub_input = input_[x: x + config.image_size,
                                        y: y + config.image_size]
-                    sub_input_prev = input_prev[x: x + config.image_size,
-                                                y: y + config.image_size]
-                    sub_input_next = input_next[x: x + config.image_size,
-                                                y: y + config.image_size]
                     
-                    # Reshape the subinput and sublabel
+                    # Reshapes subinput
                     sub_input = sub_input.reshape([config.image_size,
                                                    config.image_size,
                                                    config.c_dim])
-                    sub_input_prev = sub_input_prev.reshape([config.image_size,
-                                                             config.image_size,
-                                                             config.c_dim])
-                    sub_input_next = sub_input_next.reshape([config.image_size,
-                                                             config.image_size, 
-                                                             config.c_dim])
-                    
-                    # Normialize
+                    # Normializes sub_input
                     sub_input =  sub_input / 255.0
-                    sub_input_prev = sub_input_prev / 255.0
-                    sub_input_next = sub_input_next / 255.0
+                    
                     
                     if config.train_mode == 0:
                         
