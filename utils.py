@@ -99,14 +99,24 @@ def prepare_data(train_mode, dataset="Train"):
             
         
         if train_mode == 0:
-            data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode0")
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
+                                    "Mode0")
             
             # make set of all dataset file path
             data = glob.glob(os.path.join(data_dir, "*.bmp"))
             data.sort()
             dataPaths.append(data)
         elif train_mode == 1:
-            data_dir = os.path.join(os.path.join(os.getcwd(), dataset), "Mode1")
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
+                                    "Mode1")
+            
+            # make set of all dataset file path
+            data = glob.glob(os.path.join(data_dir, "*.bmp"))
+            data.sort()
+            dataPaths.append(data)
+        elif train_mode == 2:
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
+                                    "Mode2")
             
             # make set of all dataset file path
             data = glob.glob(os.path.join(data_dir, "*.bmp"))
@@ -141,12 +151,17 @@ def make_sub_data(data, config):
         for lsts in data:
              
              # Sets default upper bound for image processing loop for list lsts
-             bound = len(lsts) - 1
+             ubound = len(lsts) - 1
+             lbound = 0
              
-             
+             if (config.train_mode == 1):
+                 ubound = len(lsts)     
+             elif (config.train_mode == 2):
+                 ubound = len(lsts) - 1
+                 lbound = 1
                  
              # Loops over all images in lsts
-             for i in range(0, bound):
+             for i in range(lbound, ubound):
                  input_data = []
                  if config.train_mode == 0:
                         
@@ -159,6 +174,16 @@ def make_sub_data(data, config):
                      # Prepares test frame set using frame i
                      input_ = imread(lsts[i]) / 255.0
                      input_data = input_
+                 elif config.train_mode == 2:
+                     
+                     # Prepares test frame set using frame i, frame i+1
+                     # frame i-1
+                
+                     input_ = imread(lsts[i]) / 255.0
+                     inputNext_ = imread(lsts[i+1]) / 255.0
+                     inputPrev_ = imread(lsts[i-1]) / 255.0
+                     
+                     input_data = np.dstack((input_, inputPrev_, inputNext_))
                             
                  sub_input_sequence.append(input_data)
         return sub_input_sequence, sub_label_sequence
@@ -182,6 +207,7 @@ def make_sub_data(data, config):
                 input_prev, _ = preprocess(lsts[i-1], config.scale)
                 input_next, _ = preprocess(lsts[i+1], config.scale)
             
+            
             if len(input_.shape) == 3: # is color
                 h, w, c = input_.shape
             else:
@@ -203,12 +229,14 @@ def make_sub_data(data, config):
     
                         # Reshapes subframes from prev and next frames if
                         # train_mode is 0 or 2
-                        sub_input_prev = sub_input_prev.reshape([config.image_size,
-                                                                 config.image_size,
-                                                                 config.c_dim])
-                        sub_input_next = sub_input_next.reshape([config.image_size,
-                                                                 config.image_size, 
-                                                                 config.c_dim])
+                        sub_input_prev = \
+                              sub_input_prev.reshape([config.image_size,
+                                                  config.image_size,
+                                                  config.c_dim])
+                        sub_input_next = \
+                          sub_input_next.reshape([config.image_size,
+                                                  config.image_size, 
+                                                  config.c_dim])
                         
                         # Normalizes sub input frames
                         sub_input_prev = sub_input_prev / 255.0
@@ -231,7 +259,7 @@ def make_sub_data(data, config):
                         # Prepares one frame pair if train_mode == 0
                         sub_curr_prev = np.dstack((sub_input, sub_input_prev))
                         
-                        # Prepares sub_input_data of dimension [l x w x 2*c_dim]
+                        # Prepares sub_input_data of dimension [h x w x 2*c_dim]
                         sub_input_data = np.array(sub_curr_prev)
                     elif config.train_mode == 1:
                         
@@ -239,14 +267,17 @@ def make_sub_data(data, config):
                         sub_input_data = np.array(sub_input)
                     else:
                         
-                        # Prepares subframe tensors curr-prev frames and curr-next frames
+                        # Prepares subframe tensors curr-prev frames and 
+                        # curr-next frames
                         # Each tensor is of dimension h x w x (2*c_dim)
-                        sub_curr_prev = np.dstack((sub_input, sub_input_prev))
-                        sub_curr_next = np.dstack((sub_input, sub_input_next))
+                        sub_curr_prev_next = np.dstack((sub_input,
+                                                        sub_input_prev,
+                                                        sub_input_next))
                         
-                        # Prepares sub_input_data of dimension [2 x l x w x 2*c_dim]
-                        sub_input_data = np.array([sub_curr_prev,
-                                                   sub_curr_next])
+                        
+                        # Prepares sub_input_data of dimension
+                        # [2 x l x w x 2*c_dim]
+                        sub_input_data = np.array(sub_curr_prev_next)
                     
                     # Add to sequence
                     sub_input_sequence.append(sub_input_data)
@@ -264,10 +295,14 @@ def make_sub_data(data, config):
                         
                         # Sets label to piece from original image 
                         # if train_mode is 1 or 2
-                        sub_label = label_[x: x + config.image_size * config.scale,
-                                           y: y + config.image_size * config.scale]
-                        sub_label = sub_label.reshape([config.image_size * config.scale,
-                                                       config.image_size * config.scale,
+                        sub_label = label_[x: x + config.image_size 
+                                           * config.scale,
+                                           y: y + config.image_size 
+                                           * config.scale]
+                        sub_label = sub_label.reshape([config.image_size 
+                                                       * config.scale,
+                                                       config.image_size 
+                                                       * config.scale,
                                                        config.c_dim])
                         
                         # Normialize
@@ -276,8 +311,10 @@ def make_sub_data(data, config):
                         # Add to sequence
                         sub_label_sequence.append(sub_label)
             else:
-                for x in range(0, h - config.image_size + 1, config.stride):
-                    for y in range(0, w - config.image_size + 1, config.stride):
+                for x in range(0, h - config.image_size + 1,
+                               config.stride):
+                    for y in range(0, w - config.image_size + 1,
+                                   config.stride):
                         
                         # Sets target image to label if train mode is 0
                         sub_label = input_[x: x + config.image_size,
@@ -319,23 +356,29 @@ def make_data_hf(input_, label_, config):
         os.makedirs(os.path.join(os.getcwd(),config.checkpoint_dir))
 
     if config.is_train:
-        savepath = os.path.join(os.getcwd(), config.checkpoint_dir + '/train.h5')
+        savepath = os.path.join(os.getcwd(), config.checkpoint_dir 
+                                + '/train.h5')
     else:
-        savepath = os.path.join(os.getcwd(), config.checkpoint_dir + '/test.h5')
-
+        savepath = os.path.join(os.getcwd(), config.checkpoint_dir 
+                                + '/test.h5')
+    
+    print('Saving prepared data...')
     with h5py.File(savepath, 'w') as hf:
         hf.create_dataset('input', data=input_)
         hf.create_dataset('label', data=label_)
 
 def input_setup(config):
     """
-        Read image files and make their sub-images and saved them as a h5 file format
+        Read image files and make their sub-images and saved them as a 
+        h5 file format
     """
 
     # Load data path, if is_train False, get test data
+    print('Loading data to be prepared...')
     data = load_data(config.is_train, config.train_mode)
 
     # Make sub_input and sub_label, if is_train false more return nx, ny
+    print('Preparing data...')
     sub_input_sequence, sub_label_sequence = make_sub_data(data, config)
     
     # Make list to numpy array. With this transform

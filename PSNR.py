@@ -20,9 +20,9 @@ def psnr(target, ref, scale):
 
 
 if __name__ == "__main__":
-    data_HR = glob.glob(os.path.join('./Test/',"flower_GT.jpg"))
+    data_HR = glob.glob(os.path.join('./Test/Mode2/',"frame374.bmp"))
     print(data_HR)
-    data_LR = glob.glob('./result/result.png')
+    data_LR = glob.glob('./result/result0.png')
     print(data_LR)
     hr = modcrop(cv2.imread(data_HR[0]))
     lr = cv2.imread(data_LR[0])
