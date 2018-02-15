@@ -631,6 +631,8 @@ class ESPCN(object):
             if (self.train_mode==0):
                 
                 # Performs testing for mode 0
+                # Saves each motion compensated image generated from 
+                # from a frame set to result_dir
                 # Note: Each testing image must have the same size
                 for i in range(len(input_)):
                     result = self.pred.eval({self.images_curr_prev: input_[i].reshape(1,
@@ -646,6 +648,9 @@ class ESPCN(object):
                     imsave(x, config.result_dir+'/result'+str(i)+'.png', config)
                 
             elif self.train_mode == 1:
+                
+                # Performs testing for mode 1
+                # Saves hr images for each input image to resut_dir
                 for i in range(len(input_)):
                     result = self.pred.eval({self.images_in: input_[i].reshape(1,
                                              self.h, self.w, self.c_dim)})
@@ -655,6 +660,10 @@ class ESPCN(object):
                     imsave(x, config.result_dir+'/result'+str(i)+'.png',
                            config)
             elif self.train_mode == 2:
+                
+                # Performs testing for mode 2
+                # Saves each hr images generated from a consecutive frame set
+                # to result_dir
                 for i in range(len(input_)):
                     
                     # Prepares current and previous frames
