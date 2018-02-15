@@ -197,7 +197,8 @@ class ESPCN(object):
             
             # Defines loss function for training in unison
             self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) \
-            + tf.reduce_mean(tf.square(self.imgPrev-self.images_prev_curr[:, :, :, 0:self.c_dim])) + tf.reduce_mean(tf.square(self.imgNext-self.images_prev_curr[:, :, :, 0:self.c_dim])) 
+            + tf.reduce_mean(tf.square(self.imgPrev-self.images_prev_curr[:, :, :, 0:self.c_dim])) \
+            + tf.reduce_mean(tf.square(self.imgNext-self.images_prev_curr[:, :, :, 0:self.c_dim])) 
 
         self.saver = tf.train.Saver() # To save checkpoint
         
@@ -549,7 +550,17 @@ class ESPCN(object):
              # Does the concat RGB
             X = tf.concat([self._phase_shift_test(x, r) for x in Xc], 3)
         return X
-
+    
+    '''
+       This method performs training / testing operations given config.
+       Training / Testing is supported for all 3 modes from self.train_mode.
+       
+       See class __init__() for additional a description of training modes.
+       
+       Input:
+            config: config object of this class
+       
+    '''
     def train(self, config):
         
         # NOTE : if train, the nx, ny are ingnored
@@ -599,7 +610,9 @@ class ESPCN(object):
                     elif(config.train_mode == 2):
                         curr_prev = batch_images[:, :, :, 0:2*self.c_dim]
                         curr_next = np.concatenate( (batch_images[:, :, :, 0:self.c_dim ],
-                                                batch_images[:, :, :, 2*self.c_dim:3*self.c_dim]), axis = 3)
+                                                batch_images[:, :, :,
+                                                             2*self.c_dim:3*self.c_dim]),
+                                                              axis = 3)
                         _, err = self.sess.run([self.train_op, self.loss],
                                                feed_dict={self.images_prev_curr: curr_prev,
                                                            self.images_next_curr: curr_next,
@@ -651,7 +664,8 @@ class ESPCN(object):
                     # Prepares stack of current and next frames
                     curr_next = np.concatenate( (input_[i, :, :, 0:self.c_dim],
                                             input_[i,  :, :, 
-                                                   2*self.c_dim:3*self.c_dim]), axis=2).reshape(1,
+                                                   2*self.c_dim:3*self.c_dim]),
+                                                axis=2).reshape(1,
                                              self.h, self.w, 2*self.c_dim)
                             
                     
@@ -663,7 +677,17 @@ class ESPCN(object):
                     imsave(x, config.result_dir+'/result'+str(i)+'.png',
                            config)
             
-            
+    '''
+    This method performs model loading given checkpoint_dir. Model
+    is loaded based on self.image_size and self.scale from
+    different directories. Different models are loaded based on
+    self.train_mode. See class __init__() method for a description
+    of different training modes.
+    
+    Input:
+        checkpoint_dir: directory to load checkpoint
+    
+    '''
     def load(self, checkpoint_dir):
         """
             To load the checkpoint use to test or pretrain
@@ -674,7 +698,7 @@ class ESPCN(object):
         
         model_dir = ""
         
-        # gives model name training data size and scale
+        # gives model name training data size and scale based on training mode
         if(self.train_mode == 0):
             model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
         elif(self.train_mode == 1):
@@ -687,16 +711,28 @@ class ESPCN(object):
         checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
         
-        # Check the checkpoint is exist 
+        # Checks if checkpoints exists 
         if ckpt and ckpt.model_checkpoint_path:
             
-             # converts unicode to string
+            # converts unicode to string
             ckpt_path = str(ckpt.model_checkpoint_path)
+            
+            # Loads model from ckt_path
             self.saver.restore(self.sess, os.path.join(os.getcwd(), ckpt_path))
             print("\n Checkpoint Loading Success! %s\n\n"% ckpt_path)
         else:
             print("\n! Checkpoint Loading Failed \n\n")
-            
+    
+    '''
+    This method performs model saving given checkpoint_dir. Model
+    is saved based on self.image_size and self.scale into different
+    directories, Different models are saved based on self.train_mode.
+    See class __init__() method for a description of different training modes. 
+    
+    Input:
+        checkpoint_dir: directory to load checkpoint
+    
+    '''
     def save(self, checkpoint_dir, step):
         """
             To save the checkpoint use to test or pretrain
@@ -719,10 +755,12 @@ class ESPCN(object):
                                       self.image_size,self.scale)
             
         checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
-
+        
+        # Checks if model checkpoint directory exists
         if not os.path.exists(checkpoint_dir):
              os.makedirs(checkpoint_dir)
-
+        
+        # Saves model to checkpoint_dir
         self.saver.save(self.sess,
                         os.path.join(checkpoint_dir, model_name),
                         global_step=step)
