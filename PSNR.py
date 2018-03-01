@@ -16,15 +16,23 @@ def psnr(target, ref, scale):
     diff = ref_data - target_data
     diff = diff.flatten('C')
     rmse = math.sqrt(np.mean(diff ** 2.) )
+    eps = np.finfo(np.float64).eps
+    if(rmse == 0):
+        rmse = eps 
     return 20*math.log10(255.0/rmse)
 
 
 if __name__ == "__main__":
-    data_HR = glob.glob(os.path.join('./Test/Mode2/',"frame374.bmp"))
+    data_HR = glob.glob(os.path.join('./Test/Mode1/',"sw_trailer2_0.bmp"))
     print(data_HR)
     data_LR = glob.glob('./result/result0.png')
     print(data_LR)
-    hr = modcrop(cv2.imread(data_HR[0]))
+    #hr = modcrop(cv2.imread(data_HR[0]))
+    hr = cv2.imread(data_HR[0])
     lr = cv2.imread(data_LR[0])
-    lr = modcrop(cv2.resize(lr,None,fx = 1.0/3 ,fy = 1.0/3, interpolation = cv2.INTER_CUBIC))
+    print(hr)
+    print(lr)
+    #lr = modcrop(cv2.resize(lr,None,fx = 1.0/3 ,fy = 1.0/3, interpolation = cv2.INTER_CUBIC))
+    lr = cv2.resize(lr,None,fx = 1.0/3 ,fy = 1.0/3, interpolation = cv2.INTER_CUBIC)
+    print(lr)
     print(psnr(lr, hr, scale = 3))

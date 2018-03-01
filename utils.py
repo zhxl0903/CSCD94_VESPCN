@@ -13,6 +13,7 @@ def imread(path):
     return img
 
 def imsave(image, path, config):
+    
     #checkimage(image)
     # Check the check dir, if not, create one
     if not os.path.isdir(os.path.join(os.getcwd(),config.result_dir)):
@@ -56,7 +57,9 @@ def preprocess(path ,scale = 3):
             scale: the image need to scale 
     """
     img = imread(path)
-
+    
+    # Crops image to ensure length and width of img is divisble by 
+    # scale for resizing by scale
     label_ = modcrop(img, scale)
     
     # Resize by scaling factor
@@ -93,7 +96,10 @@ def prepare_data(train_mode, dataset="Train"):
                     
                     # make set of all dataset file path
                     data = glob.glob(os.path.join(dataFolderDir, "*.bmp"))
-                    data.sort()
+                    
+                    # Sorts by number in file name
+                    data.sort(key=lambda f: int(''.join(filter(str.isdigit,
+                                                       os.path.basename(f)))))
                     dataPaths.append(data)
     else:
             
@@ -104,7 +110,11 @@ def prepare_data(train_mode, dataset="Train"):
             
             # make set of all dataset file path
             data = glob.glob(os.path.join(data_dir, "*.bmp"))
-            data.sort()
+            
+            # Sorts by number in file name
+            data.sort(key=lambda f: int(''.join(filter(str.isdigit,
+                                                       os.path.basename(f)))))
+
             dataPaths.append(data)
         elif train_mode == 1:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
@@ -112,7 +122,11 @@ def prepare_data(train_mode, dataset="Train"):
             
             # make set of all dataset file path
             data = glob.glob(os.path.join(data_dir, "*.bmp"))
-            data.sort()
+            
+            # Sorts by number in file name
+            data.sort(key=lambda f: int(''.join(filter(str.isdigit,
+                                                       os.path.basename(f)))))
+
             dataPaths.append(data)
         elif train_mode == 2:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
@@ -120,7 +134,11 @@ def prepare_data(train_mode, dataset="Train"):
             
             # make set of all dataset file path
             data = glob.glob(os.path.join(data_dir, "*.bmp"))
-            data.sort()
+            
+            # Sorts by number in file name
+            data.sort(key=lambda f: int(''.join(filter(str.isdigit,
+                                                       os.path.basename(f)))))
+
             dataPaths.append(data)
             
     print(dataPaths)
@@ -191,12 +209,14 @@ def make_sub_data(data, config):
     for lsts in data:
         
         # Sets default upper bound for image processing loop for list lsts
-        bound = len(lsts) - 1
-        
+        ubound = len(lsts) - 1
+        lbound = 1 
         # Sets bound to loop over all images in data if train mode is 1
         if(config.train_mode == 1):
-            bound = len(lsts)
-        for i in range(1, bound):
+            ubound = len(lsts)
+            lbound = 0
+            
+        for i in range(lbound, ubound):
             
             # Performs resize of 3 neighbouring images using bicubic
             # Labels are generated for current frame image
@@ -259,7 +279,7 @@ def make_sub_data(data, config):
                         # Prepares one frame pair if train_mode == 0
                         sub_curr_prev = np.dstack((sub_input, sub_input_prev))
                         
-                        # Prepares sub_input_data of dimension [h x w x 2*c_dim]
+                        # Prepares sub_input_data of shape (h , w , 2*c_dim)
                         sub_input_data = np.array(sub_curr_prev)
                     elif config.train_mode == 1:
                         
@@ -269,14 +289,13 @@ def make_sub_data(data, config):
                         
                         # Prepares subframe tensors curr-prev frames and 
                         # curr-next frames
-                        # Each tensor is of dimension h x w x (2*c_dim)
+                        # Each tensor is of shape (h, w, (2*c_dim))
                         sub_curr_prev_next = np.dstack((sub_input,
                                                         sub_input_prev,
                                                         sub_input_next))
                         
                         
-                        # Prepares sub_input_data of dimension
-                        # [2 x l x w x 2*c_dim]
+                        # Prepares sub_input_data of shape (2, l, w, 2*c_dim)
                         sub_input_data = np.array(sub_curr_prev_next)
                     
                     # Add to sequence

@@ -3,11 +3,11 @@ from model import ESPCN
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
-flags.DEFINE_integer("epoch", 400, "Number of epoch")
+flags.DEFINE_integer("epoch", 360, "Number of epoch")
 flags.DEFINE_integer("image_size", 32, "The size of image input")
 flags.DEFINE_integer("c_dim", 3, "The size of channel")
 flags.DEFINE_boolean("is_train", True, "if training")
-flags.DEFINE_integer("train_mode", 0, "0 spatial transformer 1 ESPSCN 2 VESPCN")
+flags.DEFINE_integer("train_mode", 0, "0 Spatial Transformer 1 ESPSCN 2 VESPCN")
 flags.DEFINE_integer("scale", 3, "the size of scale factor for preprocessing input image")
 flags.DEFINE_integer("stride", 64, "the size of stride")
 flags.DEFINE_string("checkpoint_dir", "checkpoint", "Name of checkpoint directory")
@@ -15,6 +15,7 @@ flags.DEFINE_float("learning_rate", 1e-4 , "The learning rate")
 flags.DEFINE_integer("batch_size", 128, "the size of batch")
 flags.DEFINE_string("result_dir", "result", "Name of result directory")
 flags.DEFINE_string("test_img", "", "test_img")
+flags.DEFINE_string("load_existing_data", False, "True iff existing hf data is loaded for training/testing")
 
 
 def main(_): #?
@@ -28,6 +29,7 @@ def main(_): #?
                       scale = FLAGS.scale,
                       c_dim = FLAGS.c_dim,
                       batch_size = FLAGS.batch_size,
+                      load_existing_data = FLAGS.load_existing_data,
                       config=config
                       )
     
