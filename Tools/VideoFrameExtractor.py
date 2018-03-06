@@ -13,11 +13,17 @@ import scipy as sp
 import time
 
 if __name__=='__main__':
-    cap = cv2.VideoCapture("Solo A Star Wars Story Big Game TV Spot (45)_144p.mp4")
     
-    for i in range(10000):
-        ret, frame = cap.read()  
-        cv2.imwrite('C:\\zhxl0903\\CSCD94H3\\Optical Flow\\TestData\\frame' + str(i) + '.bmp', frame)
+    for i in range(30):
+        
+        print('Working on video ', i, ' ...')
+        cap = cv2.VideoCapture("v" + str(i) + ".mp4")
     
-    cap.release()
-    cv2.destroyAllWindows()
+        try:
+            for j in range(3000):
+                ret, frame = cap.read()  
+                cv2.imwrite('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Videos\\360p\\v' + str(i) + '\\' + str(j) + '.png', frame)
+        except:
+            print('We have less than 3000 frames in video')
+        cap.release()
+        cv2.destroyAllWindows()
