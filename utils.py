@@ -95,7 +95,7 @@ def prepare_data(train_mode, dataset="Train"):
                     dataFolderDir = os.path.join(data_dir, folder)        
                     
                     # make set of all dataset file path
-                    data = glob.glob(os.path.join(dataFolderDir, "*.bmp"))
+                    data = glob.glob(os.path.join(dataFolderDir, "*.png"))
                     
                     # Sorts by number in file name
                     data.sort(key=lambda f: int(''.join(filter(str.isdigit,
@@ -109,7 +109,7 @@ def prepare_data(train_mode, dataset="Train"):
                                     "Mode0")
             
             # make set of all dataset file path
-            data = glob.glob(os.path.join(data_dir, "*.bmp"))
+            data = glob.glob(os.path.join(data_dir, "*.png"))
             
             # Sorts by number in file name
             data.sort(key=lambda f: int(''.join(filter(str.isdigit,
@@ -121,7 +121,7 @@ def prepare_data(train_mode, dataset="Train"):
                                     "Mode1")
             
             # make set of all dataset file path
-            data = glob.glob(os.path.join(data_dir, "*.bmp"))
+            data = glob.glob(os.path.join(data_dir, "*.png"))
             
             # Sorts by number in file name
             data.sort(key=lambda f: int(''.join(filter(str.isdigit,
@@ -133,7 +133,7 @@ def prepare_data(train_mode, dataset="Train"):
                                     "Mode2")
             
             # make set of all dataset file path
-            data = glob.glob(os.path.join(data_dir, "*.bmp"))
+            data = glob.glob(os.path.join(data_dir, "*.png"))
             
             # Sorts by number in file name
             data.sort(key=lambda f: int(''.join(filter(str.isdigit,

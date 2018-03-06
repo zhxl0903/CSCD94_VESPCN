@@ -3,7 +3,7 @@ from model import ESPCN
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
-flags.DEFINE_integer("epoch", 360, "Number of epoch")
+flags.DEFINE_integer("epoch", 600, "Number of epoch")
 flags.DEFINE_integer("image_size", 32, "The size of image input")
 flags.DEFINE_integer("c_dim", 3, "The size of channel")
 flags.DEFINE_boolean("is_train", True, "if training")
