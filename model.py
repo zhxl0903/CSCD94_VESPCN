@@ -640,6 +640,7 @@ class ESPCN(object):
         time_ = time.time()
 
         self.load(config.checkpoint_dir)
+        
         # Train
         if config.is_train:
             
@@ -650,6 +651,18 @@ class ESPCN(object):
             input_ = input_[numData]
             label_ = label_[numData]
             
+            # Prepares frame sets for feeding into different spatial
+            # transformers if training mode is 2
+            if self.train_mode == 2:
+                print("Preparing frames sets for spatial transformers...")
+                
+                curr_prev_imgs = input_[:, :, :, 0:2*self.c_dim]
+                curr_next_imgs = np.concatenate( (input_[:, :, :, \
+                                                               0:self.c_dim],\
+                                                input_[:, :, :, \
+                                                             2*self.c_dim: \
+                                                             3*self.c_dim]), \
+                                                             axis = 3)
             print("Now Start Training...")
             for ep in range(config.epoch):
                 
@@ -670,13 +683,19 @@ class ESPCN(object):
                         iterationBatchSize = final_batch_size
                     else:
                         iterationBatchSize = config.batch_size
+                    
+                    # Prepares images for current batch if train_mode is not 2
+                    # Data will be prepared differently for train_mode=2
+                    if not (self.train_mode == 2) :
+                        batch_images = input_[idx * config.batch_size \
+                                              : idx * config.batch_size \
+                                              + iterationBatchSize]
                         
-                    batch_images = input_[idx * config.batch_size \
-                                          : idx * config.batch_size \
-                                          + iterationBatchSize]
+                    # Prepares labels for current batch
                     batch_labels = label_[idx * config.batch_size \
-                                          : idx * config.batch_size \
-                                          + iterationBatchSize]
+                                              : idx * config.batch_size \
+                                              + iterationBatchSize]
+                    
                     #print('Batch Shape:', np.shape(batch_images))
                     #print('Label Shape:', np.shape(batch_labels))
                     
@@ -696,13 +715,16 @@ class ESPCN(object):
                                                           self.labels: \
                                                           batch_labels})
                     elif(config.train_mode == 2):
-                        curr_prev = batch_images[:, :, :, 0:2*self.c_dim]
-                        curr_next = np.concatenate( (batch_images[:, :, :, \
-                                                               0:self.c_dim],\
-                                                batch_images[:, :, :, \
-                                                             2*self.c_dim: \
-                                                             3*self.c_dim]), \
-                                                             axis = 3)
+                        
+                        # Obtains input frame sets for current batch
+                        curr_prev = curr_prev_imgs[idx * config.batch_size \
+                                              : idx * config.batch_size \
+                                              + iterationBatchSize]
+                        curr_next = curr_next_imgs[idx * config.batch_size \
+                                              : idx * config.batch_size \
+                                              + iterationBatchSize]
+                        
+                        # Feeds images and labels for current batch
                         _, err = self.sess.run([self.train_op, self.loss], \
                                                feed_dict = \
                                                {self.images_prev_curr: \
