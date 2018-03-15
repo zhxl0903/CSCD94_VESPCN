@@ -5,6 +5,7 @@ import time
 import os
 import glob
 import cv2
+import scipy as sp
 
 from utils import (
     input_setup,
@@ -45,6 +46,7 @@ class ESPCN(object):
                  batch_size,
                  c_dim,
                  load_existing_data,
+                 subMode,
                  config
                  ):
         
@@ -57,13 +59,12 @@ class ESPCN(object):
         self.is_train = is_train
         self.c_dim = c_dim
         self.scale = scale
+        self.subMode = subMode
         self.train_mode = train_mode
         self.batch_size = batch_size
         self.config = config
         self.build_model()
         
-       
-    
     '''
        This method builds network based on training mode. Placeholders are
        setup based on training mode and is_train. Predictions are obtained
@@ -100,6 +101,17 @@ class ESPCN(object):
                 self.images_in = tf.placeholder(tf.float32, [None,
                                                              self.image_size,
                                                              self.image_size,
+                                                             self.c_dim],
+                                                            name='image_in')
+                self.labels = tf.placeholder(tf.float32, 
+                                             [None,
+                                              self.image_size * self.scale,
+                                              self.image_size * self.scale,
+                                              self.c_dim], name='labels')
+            elif self.train_mode == 4:
+                self.images_in = tf.placeholder(tf.float32, [None,
+                                                             self.image_size * self.scale,
+                                                             self.image_size * self.scale,
                                                              self.c_dim],
                                                             name='image_in')
                 self.labels = tf.placeholder(tf.float32, 
@@ -156,7 +168,8 @@ class ESPCN(object):
                                               self.h,
                                               self.w,
                                               self.c_dim], name='labels')
-            elif self.train_mode == 1:
+            elif self.train_mode == 1 or self.train_mode == 3:
+            
                 
                 # Sets up placeholders for training subpixel net 
                 # if train mode is 1
@@ -164,6 +177,21 @@ class ESPCN(object):
                                                 [None,
                                                  self.h,
                                                  self.w,
+                                                 self.c_dim],
+                                                 name='images_in')
+                self.labels = tf.placeholder(tf.float32,
+                                             [None,
+                                              self.h * self.scale,
+                                              self.w * self.scale,
+                                              self.c_dim], name='labels')
+            elif self.train_mode == 4:
+                
+                # Sets up placeholders for training subpixel net 
+                # if train mode is 1
+                self.images_in = tf.placeholder(tf.float32,
+                                                [None,
+                                                 self.h * self.scale,
+                                                 self.w * self.scale,
                                                  self.c_dim],
                                                  name='images_in')
                 self.labels = tf.placeholder(tf.float32,
@@ -195,7 +223,8 @@ class ESPCN(object):
                                               self.w * self.scale,
                                               self.c_dim], name='labels')
         
-        if self.train_mode == 0 or self.train_mode == 1:
+        if self.train_mode == 0 or self.train_mode == 1 or \
+        self.train_mode == 3 or self.train_mode == 4:
             self.pred = self.model()
         else:
             self.pred, self.imgPrev, self.imgNext = self.model()
@@ -205,11 +234,12 @@ class ESPCN(object):
             
             # Defines loss function for training a single spatial transformer
             self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
-        elif self.train_mode == 1:
+        elif self.train_mode == 1 or self.train_mode == 4:
             
             # Defines loss function for training subpixel convnet
             self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
-        else:
+            print('Mode 1/4: Mean-Squared Loss Activated')
+        elif self.train_mode == 2:
             
             # Defines loss function for training in unison
             self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) \
@@ -220,8 +250,9 @@ class ESPCN(object):
             + tf.reduce_mean(tf.square(self.imgNext - \
                                        self.images_prev_curr[:, :, :, \
                                                              0:self.c_dim])) 
-
-        self.saver = tf.train.Saver() # To save checkpoint
+            
+        if self.train_mode != 3:
+            self.saver = tf.train.Saver() # To save checkpoint
         
     '''
     This method constructs spatial transformer given frameSet.
@@ -436,6 +467,23 @@ class ESPCN(object):
                                            kernel_initializer = wInitializer1,
                                            bias_initializer = biasInitializer,
                                            name = 'subPixelIn')
+       elif self.train_mode == 3:
+           
+           # Sets height and width for resizing based on is_train
+           if self.is_train:
+               
+               # Sets to training data patch size
+               height = self.image_size
+               width = self.image_size
+           else:
+               
+               # Sets to image size
+               height = self.h
+               width = self.w
+               
+           biCubic = tf.image.resize_images(imgSet, [height*self.scale,
+                                            width*self.scale],
+                                            method = tf.image.ResizeMethod.BICUBIC)
     
        # TO DO: Enable all layers in every step but 
        # adjust inputs and outputs to layers depending on
@@ -476,15 +524,38 @@ class ESPCN(object):
                                     name = 'subPixelL6')
            
            ps = self.PS(conv6, self.scale)
+       elif self.train_mode == 4:
+           
+           # Builds SRCNN network if train_mode is 4
+           conv1 = tf.layers.conv2d(imgSet,  64, 9, padding='same',
+                                    activation=tf.nn.relu,
+                                    kernel_initializer = wInitializer1,
+                                    bias_initializer = biasInitializer,
+                                    name = 'SRCNN1')
+           conv2 = tf.layers.conv2d(conv1,  32, 1, padding='same',
+                                    activation=tf.nn.relu,
+                                    kernel_initializer = wInitializer1,
+                                    bias_initializer = biasInitializer,
+                                    name = 'SRCNN2')
+           conv3 = tf.layers.conv2d(conv2,  self.c_dim, 5, padding='same',
+                                    activation=None,
+                                    kernel_initializer = wInitializer1,
+                                    bias_initializer = biasInitializer,
+                                    name = 'SRCNN3')
        
+    
        # Returns network output given self.train_mode
        if self.train_mode == 0:
            return motionCompensatedImgOut
        elif self.train_mode == 1:
            return tf.nn.tanh(ps)
+       elif self.train_mode == 3:
+           return (biCubic)
+       elif self.train_mode == 4:
+           return (conv3)
        else:
            return (tf.nn.tanh(ps), imgPrev, imgNext) 
-    
+       
     '''
     This method serves as a helper method for PS ad PS2 in the case of 
     processing training images. Input tensor X in PS and PS2 has r*r*cdim 
@@ -631,15 +702,17 @@ class ESPCN(object):
         print(input_.shape, label_.shape)
         
         #  Sets optimizer to be Adam optimizer
-        self.train_op = tf.train.AdamOptimizer(learning_rate=
-                                     config.learning_rate).minimize(self.loss)
+        if (self.train_mode != 3):
+            self.train_op = tf.train.AdamOptimizer(learning_rate= \
+                                config.learning_rate).minimize(self.loss)
         
         self.sess.run(tf.global_variables_initializer())
 
         counter = 0
         time_ = time.time()
-
-        self.load(config.checkpoint_dir)
+        
+        if self.train_mode != 3:
+            self.load(config.checkpoint_dir)
         
         # Train
         if config.is_train:
@@ -663,6 +736,18 @@ class ESPCN(object):
                                                              2*self.c_dim: \
                                                              3*self.c_dim]), \
                                                              axis = 3)
+            elif self.train_mode == 4:
+                
+                # Upscales input data using bicubic interpolation
+                print('Upscaling training data using Bicubic Interpolation...')
+                
+                input_new = []
+                for i in range(len(input_)):
+                    input_new.append(sp.misc.imresize(input_[i],
+                          (self.image_size*self.scale,
+                           self.image_size*self.scale), interp = 'bicubic'))
+                input_ =  np.array(input_new)
+                
             print("Now Start Training...")
             for ep in range(config.epoch):
                 
@@ -732,7 +817,15 @@ class ESPCN(object):
                                                 self.images_next_curr: \
                                                     curr_next, \
                                                 self.labels: batch_labels})
-
+                    elif(config.train_mode == 4):
+                        
+                        
+                        _, err = self.sess.run([self.train_op, self.loss], \
+                                               feed_dict={self.images_in: \
+                                                          batch_images, \
+                                                          self.labels: \
+                                                          batch_labels})
+                        
                     if counter % 10 == 0:
                         print("Epoch: ", (ep+1), " Step: ", counter,
                               " Time: ",
@@ -927,6 +1020,74 @@ class ESPCN(object):
                     #print(lr)
                     #print(curr_img)
                 print('Average PSNR: ', np.mean(psnrLst))
+            elif self.train_mode == 3:
+                
+                # Performs testing for mode 1
+                # Saves hr images for each input image to resut_dir
+                for i in range(len(input_)):
+                    result = self.pred.eval({self.images_in: \
+                                             input_[i].reshape(1, \
+                                             self.h, self.w, self.c_dim)})
+    
+                    # Obtains original input image from input_
+                    orgInput = input_[i].reshape(self.h,
+                                        self.w, self.c_dim)
+                    
+                    # Denormalizes input image
+                    orgInput = orgInput * 255.0
+                    
+                    x = np.squeeze(result)
+                    
+                    print('Shape of output image: ', x.shape)
+                    imsave(x, config.result_dir+'/result'+str(i)+'.png',
+                           config)
+                    
+                    # Loads output image
+                    data_LR = glob.glob('./result/result'+str(i)+'.png')
+                    lr = cv2.imread(data_LR[0])
+                    
+                    print('Super resolution shape: ', np.shape(x))
+                    print('Original input shape: ', np.shape(orgInput))
+                    
+                    # Computes low resolution image from super resolution image
+                    # by downscaling by self.scale
+                    lr = cv2.resize(lr, None,fx = 1.0/self.scale, 
+                                            fy = 1.0/self.scale,
+                                            interpolation = cv2.INTER_CUBIC)
+                    
+                    # Computes and prints PSNR ratio 
+                    # Appends psnr val to psnrLst for mean computation
+                    psnrVal = psnr(lr, orgInput, scale = self.scale)
+                    psnrLst.append(psnrVal)
+                    print('Image ', i, ' PSNR: ', psnrVal )
+                    
+                    # Prints shape of output image and saves output image
+                    
+                    
+                print('Average PSNR: ', np.mean(psnrLst))
+            elif self.train_mode == 4:
+                
+                for i in range(len(input_)):
+                    
+                    # Upscales image using bicubic interpolatiobn
+                    inp = input_[i].reshape(self.h, self.w, self.c_dim)
+                    inp = sp.misc.imresize(inp,
+                          (self.h*self.scale,
+                           self.w*self.scale), interp = 'bicubic')
+                    
+                    result = self.pred.eval({self.images_in: \
+                                             inp.reshape(1, \
+                                             self.h*self.scale, self.w*self.scale, self.c_dim)})
+
+                    x = np.squeeze(result)
+                    # Filters image values to be in [0,1]
+                    #x = np.clip(np.squeeze(result), 0, 1)
+                    
+                    print('Saving image ' , i)
+                    print('Shape of output image: ', x.shape)
+                    
+                    imsave(x, config.result_dir+'/result'+str(i)+'.png',
+                           config)
                 
             
     '''
@@ -952,13 +1113,17 @@ class ESPCN(object):
         
         # gives model name training data size and scale based on training mode
         if(self.train_mode == 0):
-            model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
+            model_dir = "%s_%s_%s" % ("espcn", self.image_size, self.scale)
         elif(self.train_mode == 1):
             model_dir = "%s_%s_%s" % ("espcn_subpixel",
-                                      self.image_size,self.scale)
+                                      self.image_size, self.scale)
         elif(self.train_mode == 2):
             model_dir = "%s_%s_%s" % ("vespcn",
-                                      self.image_size,self.scale)
+                                      self.image_size, self.scale)
+        elif(self.train_mode == 4):
+            model_dir = "%s_%s_%s" % ("srcnn",
+                                      self.image_size, self.scale)
+        
             
         checkpoint_dir = os.path.join(checkpoint_dir, model_dir)
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
@@ -1004,6 +1169,10 @@ class ESPCN(object):
         elif (self.train_mode == 2):
             model_name = "VESPCN.model"
             model_dir = "%s_%s_%s" % ("vespcn",
+                                      self.image_size,self.scale)
+        elif (self.train_mode == 4):
+            model_name = "SRCNN.model"
+            model_dir = "%s_%s_%s" % ("srcnn",
                                       self.image_size,self.scale)
             
         checkpoint_dir = os.path.join(checkpoint_dir, model_dir)

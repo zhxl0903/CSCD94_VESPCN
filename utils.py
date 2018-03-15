@@ -128,9 +128,33 @@ def prepare_data(train_mode, dataset="Train"):
                                                        os.path.basename(f)))))
 
             dataPaths.append(data)
+        elif train_mode == 3:
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
+                                    "Mode3")
+            
+            # make set of all dataset file path
+            data = glob.glob(os.path.join(data_dir, "*.png"))
+            
+            # Sorts by number in file name
+            data.sort(key=lambda f: int(''.join(filter(str.isdigit,
+                                                       os.path.basename(f)))))
+
+            dataPaths.append(data)
         elif train_mode == 2:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
                                     "Mode2")
+            
+            # make set of all dataset file path
+            data = glob.glob(os.path.join(data_dir, "*.png"))
+            
+            # Sorts by number in file name
+            data.sort(key=lambda f: int(''.join(filter(str.isdigit,
+                                                       os.path.basename(f)))))
+
+            dataPaths.append(data)
+        elif train_mode == 4:
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
+                                    "Mode4")
             
             # make set of all dataset file path
             data = glob.glob(os.path.join(data_dir, "*.png"))
@@ -172,7 +196,7 @@ def make_sub_data(data, config):
              ubound = len(lsts) - 1
              lbound = 0
              
-             if (config.train_mode == 1):
+             if (config.train_mode == 1 or config.train_mode == 3):
                  ubound = len(lsts)     
              elif (config.train_mode == 2):
                  ubound = len(lsts) - 1
@@ -187,7 +211,8 @@ def make_sub_data(data, config):
                      input_ = imread(lsts[i]) / 255.0
                      inputNext_ = imread(lsts[i+1]) / 255.0
                      input_data = np.dstack((input_, inputNext_))
-                 elif config.train_mode == 1:
+                 elif config.train_mode == 1 or config.train_mode == 3 \
+                 or config.train_mode == 4:
                         
                      # Prepares test frame set using frame i
                      input_ = imread(lsts[i]) / 255.0
@@ -212,7 +237,7 @@ def make_sub_data(data, config):
         ubound = len(lsts) - 1
         lbound = 1 
         # Sets bound to loop over all images in data if train mode is 1
-        if(config.train_mode == 1):
+        if(config.train_mode == 1 or config.train_mode == 4):
             ubound = len(lsts)
             lbound = 0
             
@@ -281,10 +306,13 @@ def make_sub_data(data, config):
                         
                         # Prepares sub_input_data of shape (h , w , 2*c_dim)
                         sub_input_data = np.array(sub_curr_prev)
-                    elif config.train_mode == 1:
+                        del sub_curr_prev
+                        del sub_input
+                    elif config.train_mode == 1 or config.train_mode == 4:
                         
                         # Obtains sub images for training subpixel convnet
                         sub_input_data = np.array(sub_input)
+                        del sub_input
                     else:
                         
                         # Prepares subframe tensors curr-prev frames and 
@@ -297,9 +325,14 @@ def make_sub_data(data, config):
                         
                         # Prepares sub_input_data of shape (2, l, w, 2*c_dim)
                         sub_input_data = np.array(sub_curr_prev_next)
+                        del sub_input
+                        del sub_input_next
+                        del sub_input_prev
+                        del sub_curr_prev_next
                     
                     # Add to sequence
                     sub_input_sequence.append(sub_input_data)
+                    del sub_input_data
     
             # Label (the time of scale)
             if config.train_mode != 0:
@@ -329,6 +362,7 @@ def make_sub_data(data, config):
                         
                         # Add to sequence
                         sub_label_sequence.append(sub_label)
+                        del sub_label
             else:
                 for x in range(0, h - config.image_size + 1,
                                config.stride):
@@ -347,6 +381,7 @@ def make_sub_data(data, config):
                         
                         # Add to sequence
                         sub_label_sequence.append(sub_label)
+                        del sub_label
 
     return sub_input_sequence, sub_label_sequence
 

@@ -62,7 +62,7 @@ def union(a, b):
     """ return the union of two lists """
     return list(set(a) | set(b))
     
-cl1h =  computeOutDim(h, 5, 0, 2)
+'''cl1h =  computeOutDim(h, 3, 0, 1)
 cl2h = computeOutDim(cl1h, 3, 0, 1)
 cl3h = computeOutDim(cl2h, 5, 0, 2)
 cl4h = computeOutDim(cl3h, 3, 2, 1)
@@ -87,7 +87,7 @@ fl1w =  computeOutDim(cupw, 5, 0, 2)
 fl2w = computeOutDim(fl1w, 3, 0, 1)
 fl3w = computeOutDim(fl2w, 3, 1, 1)
 fl4w = computeOutDim(fl3w, 3, 2, 1)
-fl5w = computeOutDim(fl4w, 3, 2, 1)
+fl5w = computeOutDim(fl4w, 3, 2, 1)'''
 
 fuph = fl5h * 2
 fupw = fl5w * 2

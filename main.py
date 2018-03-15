@@ -3,24 +3,35 @@ from model import ESPCN
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
-flags.DEFINE_integer("epoch", 600, "Number of epoch")
+flags.DEFINE_integer("epoch", 1200, "Number of epoch")
 flags.DEFINE_integer("image_size", 32, "The size of image input")
 flags.DEFINE_integer("c_dim", 3, "The size of channel")
 flags.DEFINE_boolean("is_train", True, "if training")
-flags.DEFINE_integer("train_mode", 0, "0 Spatial Transformer 1 ESPSCN 2 VESPCN")
-flags.DEFINE_integer("scale", 3, "the size of scale factor for preprocessing input image")
-flags.DEFINE_integer("stride", 64, "the size of stride")
-flags.DEFINE_string("checkpoint_dir", "checkpoint", "Name of checkpoint directory")
+flags.DEFINE_integer("train_mode", 0, "0 Spatial Transformer 1 ESPSCN 2 VESPCN \
+                     3 Bicubic 4 SRCNN")
+flags.DEFINE_integer("train_submode", 0, "For Mode 3: 0: Train VESPCNs 1: Train Subpixel 2: Train in Unison")
+flags.DEFINE_integer("scale", 3,
+                     "the size of scale factor for preprocessing input image")
+flags.DEFINE_integer("stride", 100, "the size of stride")
+flags.DEFINE_string("checkpoint_dir", "checkpoint",
+                    "Name of checkpoint directory")
 flags.DEFINE_float("learning_rate", 1e-4 , "The learning rate")
-flags.DEFINE_integer("batch_size", 128, "the size of batch")
+flags.DEFINE_integer("batch_size", 32, "the size of batch")
 flags.DEFINE_string("result_dir", "result", "Name of result directory")
 flags.DEFINE_string("test_img", "", "test_img")
-flags.DEFINE_string("load_existing_data", False, "True iff existing hf data is loaded for training/testing")
+flags.DEFINE_string("load_existing_data", False,
+                    "True iff existing hf data is loaded for training/testing")
 
 
 def main(_): #?
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
+    
+    # Checks if train mode is 3 and training is on
+    if (FLAGS.train_mode == 3 and FLAGS.is_train):
+        print('Error: Bicubic Mode does not require training')
+        return
+    
     with tf.Session(config=config) as sess:
         espcn = ESPCN(sess,
                       image_size = FLAGS.image_size,
@@ -30,6 +41,7 @@ def main(_): #?
                       c_dim = FLAGS.c_dim,
                       batch_size = FLAGS.batch_size,
                       load_existing_data = FLAGS.load_existing_data,
+                      subMode = FLAGS.train_submode,
                       config=config
                       )
     
