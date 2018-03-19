@@ -34,10 +34,12 @@ if __name__ == "__main__":
     dataFolder = 'v28s0'
     psnrLst = []
     file = open("PSNR.txt", "w")
-    for i in range(376):
-        data_LR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Comparison Different Video Categories\\Mode1',  ('result' + str(i) + '.png')))
-        data_HR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Test Data New\\1080p_one_folder', 'test (' + str(i+1) + ').png'))
-        
+    for i in range(18):
+        data_LR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Comparisons\\Mode 2\\star wars',  ('result' + str(i) + '.png')))
+        #data_HR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Test Data\\1080p\\v29s2\\',  str(i+2300) + '.png'))
+        #data_HR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Test Data New\\1080p_one_folder', 'test (' + str(i+1) + ').png'))
+        #data_HR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Test Data\\from Testing\\1080p\\video (31)_1', str(i+1485)+ '.png'))
+        data_HR = glob.glob(os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Test\\star wars\\1080p', "frame"+str(i+374)+".png"))
         hr = cv2.imread(data_HR[0])
         lr = cv2.imread(data_LR[0])
         
