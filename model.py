@@ -272,11 +272,11 @@ class ESPCN(object):
             
             # Defines loss function for training in unison
             self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) \
-            + tf.reduce_mean(tf.square(self.imgPrev - \
+            + 0.01*tf.reduce_mean(tf.square(self.imgPrev - \
                                        self.images_prev_curr[:, :, \
                                                              :, \
                                                              0:self.c_dim])) \
-            + tf.reduce_mean(tf.square(self.imgNext - \
+            + 0.01*tf.reduce_mean(tf.square(self.imgNext - \
                                        self.images_prev_curr[:, :, :, \
                                                              0:self.c_dim])) 
             
