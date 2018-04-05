@@ -29,10 +29,12 @@ class ESPCN(object):
             image_size: size of image for training
             is_train: True iff training
             train_mode: 0 is spatial transformer only
-                        1 is single frame VESPSCN with Early Fusion No MC
-                        2 is Early Fusion VESPCN with MC
+                        1 is single frame 9 Layer ESPCN 
+                        2 is 9 Layer Early Fusion VESPCN with MC
                         3 is Bicubic (No Training Required)
-                        4 is SRCNN
+                        4 is SRCNN 
+                        5 is Multi-Dir-Output Mode 2
+                        6 is Multi-Dir-Output Mode 1
             scale: upscaling ratio for super resolution
             batch_size: batch size for training
             c_dim: number of channels of each input image
@@ -48,7 +50,6 @@ class ESPCN(object):
                  batch_size,
                  c_dim,
                  load_existing_data,
-                 subMode,
                  config
                  ):
         
@@ -61,7 +62,6 @@ class ESPCN(object):
         self.is_train = is_train
         self.c_dim = c_dim
         self.scale = scale
-        self.subMode = subMode
         self.train_mode = train_mode
         self.batch_size = batch_size
         self.config = config
@@ -437,6 +437,10 @@ class ESPCN(object):
     train mode = 1: model for single frame ESPSCN 
     train mode = 2: model for VESPCN with 2 spatial transformers taking 2 
                     images each
+    train mode = 3: model for Bicubic (no training required)
+    train mode = 4: model for SRCNN 
+    train mode = 5: model for multi-dir mode 2 (no training required)
+    train mode = 6: model for multi-dir mode 1 (no training required)
     
     Returns: Output of network if train mode is 0 or 1
              Output of network and output of 2 spatial transformers of network
@@ -1228,8 +1232,12 @@ class ESPCN(object):
         
         # gives model name training data size and scale based on training mode
         if(self.train_mode == 0):
+
+            # Change model_dir to "stMC" in the future when doing fresh training
             model_dir = "%s_%s_%s" % ("espcn", self.image_size, self.scale)
         elif(self.train_mode == 1 or self.train_mode == 6):
+
+            # Change model_dir to "espcn" in the future when doing fresh training
             model_dir = "%s_%s_%s" % ("vespcn_subpixel_no_mc",
                                       self.image_size, self.scale)
         elif(self.train_mode == 2 or self.train_mode == 5):
@@ -1277,9 +1285,15 @@ class ESPCN(object):
         
         # gives model name by training data size and scale
         if (self.train_mode == 0):
+
+            # Change this to SpatialTransformerMC.model in the future
+            # when doing fresh training model_dir: "stMC"
             model_name = "ESPCN.model"
             model_dir = "%s_%s_%s" % ("espcn", self.image_size,self.scale)
         elif (self.train_mode == 1):
+
+            # Change this to ESPCN.model in the future
+            # when doing fresh training model_dir "espcn"
             model_name = "VESPCN_Subpixel_NO_MC.model"
             model_dir = "%s_%s_%s" % ("vespcn_subpixel_no_mc",
                                       self.image_size,self.scale)

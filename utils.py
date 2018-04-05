@@ -544,13 +544,13 @@ def input_setup(config):
     print('Preparing data...')
     sub_input_sequence, sub_label_sequence, dataPaths = make_sub_data(data, config)
     
-    # Make list to numpy array. With this transform
+    # Turn input data list to numpy array. With this transform
     # training mode = 0 => [?, size, size, 6]
     # training mode = 2 => [?, 2, size, size, 3]
     # training mode = 1 => [? size, size, 3]
     # training mode = 3 or 4 =>[?, size, size, 3]
     # training mode = 5 (test only) => list of np array of shape: [?, size, size, 9]
-    
+    # training mode = 6 (test only) => list of np array of shape: [?, size, size, 3]
     if(config.train_mode != 5 and config.train_mode != 6):
         arrinput = np.asarray(sub_input_sequence)
     else:
@@ -563,6 +563,7 @@ def input_setup(config):
     # [?, size , size, 3]
     arrlabel = np.asarray(sub_label_sequence) 
     
+    # Prints shapes of prepared input data if training_mode != 5 or 6
     if(config.train_mode != 5 and config.train_mode != 6):
         print('Input data shape: ', arrinput.shape)
         print('Labels data shape: ', arrlabel.shape)

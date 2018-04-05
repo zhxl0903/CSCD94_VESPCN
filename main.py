@@ -11,8 +11,6 @@ flags.DEFINE_integer("train_mode", 0, "0: Spatial Transformer 1: VESPSCN No MC\
                      2: VESPCN 3: Bicubic (No Training Required) 4: SRCNN \
                      5: Multi-Dir mode for testing mode 2 6: Multi-Dir mode \
                      for testing mode 1")
-flags.DEFINE_integer("train_submode", 0, "For Mode 3: 0: Train VESPCNs 1: \
-                       Train Subpixel 2: Train in Unison")
 flags.DEFINE_integer("scale", 3,
                      "the size of scale factor for preprocessing input image")
 flags.DEFINE_integer("stride", 100, "the size of stride")
@@ -22,7 +20,7 @@ flags.DEFINE_float("learning_rate", 1e-4 , "The learning rate")
 flags.DEFINE_integer("batch_size", 128, "the size of batch")
 flags.DEFINE_string("result_dir", "result", "Name of result directory")
 flags.DEFINE_string("test_img", "", "test_img")
-flags.DEFINE_string("load_existing_data", False,
+flags.DEFINE_boolean("load_existing_data", False,
                     "True iff existing hf data is loaded for training/testing")
 
 
@@ -30,7 +28,7 @@ def main(_): #?
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     
-    # Checks if train mode is 3 and training is on
+    # Checks if train mode is 3, 5 or 6 and training mode is on
     if (FLAGS.train_mode == 3 and FLAGS.is_train):
         print('Error: Bicubic Mode does not require training')
         return
@@ -50,7 +48,6 @@ def main(_): #?
                       c_dim = FLAGS.c_dim,
                       batch_size = FLAGS.batch_size,
                       load_existing_data = FLAGS.load_existing_data,
-                      subMode = FLAGS.train_submode,
                       config=config
                       )
     
@@ -59,5 +56,5 @@ def main(_): #?
         
 if __name__=='__main__':
     
-    # parses command argument then calls the main function
+    # Parses command-line argument then calls the main function
     tf.app.run() 
