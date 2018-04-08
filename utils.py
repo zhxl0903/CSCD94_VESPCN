@@ -6,30 +6,66 @@ import glob
 import h5py
 
 
-
-# Get the Image
 def imread(path):
+
+    """
+        This method reads an image given path.
+
+        Input:
+        path: path of image to be read
+
+        Returns:
+        img: read image in numpy array
+    """
+
     img = cv2.imread(path)
     return img
 
 def imsave(image, path, config):
-    
-    #checkimage(image)
-    # Check the check dir, if not, create one
+
+    """
+        This method saves image given image, path, and config.
+
+        Inputs:
+        image: image to be saved
+        path: path to save image in config.result_dir
+        config: FLAG from main.py
+
+    """
+
+    # checkimage(image)
+    # Checks the check dir, if not, create one
     if not os.path.isdir(os.path.join(os.getcwd(),config.result_dir)):
         os.makedirs(os.path.join(os.getcwd(),config.result_dir))
 
-    # NOTE: because normial, we need mutlify 255 back    
+    # NOTE: because normalization, we need to multiply 255 back
     cv2.imwrite(os.path.join(os.getcwd(),path),image * 255.)
 
 def checkimage(image):
+
+    """
+        This method generates a test image given image.
+
+        Input:
+        image: image to be displayed
+    """
+
     cv2.imshow("test",image)
     cv2.waitKey(0)
 
 def modcrop(img, scale =3):
+
     """
+        This method applies modcrop to img.
         To scale down and up the original image, first thing to
         do is to have no remainder while scaling operation.
+
+        Inputs:
+        img: image to apply modcrop
+        scale: downscale scale
+
+        Returns:
+        img after applying modecrop
     """
     # Check the image is grayscale
     if len(img.shape) ==3:
@@ -45,16 +81,36 @@ def modcrop(img, scale =3):
     return img
 
 def checkpoint_dir(config):
+
+    """
+        This method generates the checkpoint directory based on conifg.is_train.
+
+        Inputs:
+        config: FLAG from main.py
+
+        Returns:
+        path: path of checkpoint directory
+    """
     if config.is_train:
         return os.path.join('./{}'.format(config.checkpoint_dir), "train.h5")
     else:
         return os.path.join('./{}'.format(config.checkpoint_dir), "test.h5")
 
+
 def preprocess(path ,scale = 3):
+
     """
-        Args:
-            path: the image directory path
-            scale: the image need to scale 
+        This method prepares labels and downscaled image given path
+        of image and scale. Modcrop is used on the image label to ensure
+        length and width of image is divisible by scale.
+
+        Inputs:
+        path: the image directory path
+        scale: scale to downscale
+
+        Outputs:
+        input_: downscaled version of image
+        label_: label after applying moderop
     """
     img = imread(path)
     
@@ -73,12 +129,20 @@ def preprocess(path ,scale = 3):
 
     return input_, label_
 
+
 def prepare_data(train_mode, dataset="Train"):
+
     """
-        Args:
-            dataset: choose train dataset or test dataset
-            For train dataset, output data would be ['.../t1.bmp', 
-            '.../t2.bmp',..., 't99.bmp']
+        This method prepares data paths of frames used for data preparation.
+        Data paths in each sequence are sorted based on number in
+        the frame's file name.
+
+        Inputs:
+        train_mode: 0-6
+        dataset: prepares data paths for training dataset preparation iff dataset = Train
+
+        Returns:
+        dataPaths: list of lists of data paths for the sequences to be used for data preparation
     """
     
     # Defines list of data path lists for different folders of training data
@@ -99,11 +163,10 @@ def prepare_data(train_mode, dataset="Train"):
                     
                     # Sorts by number in file name
                     data.sort(key=lambda f: int(''.join(filter(str.isdigit,
-                                                       os.path.basename(f)))))
+                                                        os.path.basename(f)))))
                     dataPaths.append(data)
-    else:
-            
-        
+    else
+
         if train_mode == 0:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
                                     "Mode0")
@@ -170,7 +233,7 @@ def prepare_data(train_mode, dataset="Train"):
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
                                     "Mode5")
             for root, dirs, files in os.walk(data_dir):
-                if dirs != []:
+                if dirs:
                     for folder in dirs:
                         dataFolderDir = os.path.join(data_dir, folder)        
                         
@@ -182,10 +245,10 @@ def prepare_data(train_mode, dataset="Train"):
                                                            os.path.basename(f)))))
                         dataPaths.append(data)
         elif train_mode == 6:
-             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
+            data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
                                     "Mode6")
-             for root, dirs, files in os.walk(data_dir):
-                if dirs != []:
+            for root, dirs, files in os.walk(data_dir):
+                if dirs:
                     for folder in dirs:
                         dataFolderDir = os.path.join(data_dir, folder)        
                         
@@ -194,14 +257,26 @@ def prepare_data(train_mode, dataset="Train"):
                         
                         # Sorts by number in file name
                         data.sort(key=lambda f: int(''.join(filter(str.isdigit,
-                                                           os.path.basename(f)))))
+                                                            os.path.basename(f)))))
                         dataPaths.append(data)
-            
-            
+
     print(dataPaths)
     return dataPaths
 
 def load_data(is_train, train_mode):
+
+    """
+        This method prepares file paths for data to be used for data preparation
+        given is_train and train_mode.
+
+        Inputs:
+        is_train: Gets file paths for training data iff is_train=True
+        train_mode: train mode
+
+        Returns:
+        data: list containing prepared file paths
+    """
+
     if is_train:
         data = prepare_data(train_mode = train_mode, dataset="Train")
     else:
@@ -211,78 +286,89 @@ def load_data(is_train, train_mode):
         data = prepare_data(train_mode = train_mode, dataset="Test")
     return data
 
+
 def make_sub_data(data, config):
+
     """
-        Make the sub_data set
-        Args:
-            data : the set of all file path 
-            config : the all flags
+        This method makes sub_data set based on train mode in config.
+        If config.is_train = False, then no labels are prepared.
+
+        Inputs:
+            data : list of lists of all data paths for the frames from different sequences
+            config : FLAGS from main.py
+
+        Returns:
+            sub_input_sequence: list of prepared sub_input or testing data
+            sub_label_sequence: list of prepared labels if config.is_train=True ([] otherwise)
+            dataPaths: dataPaths of target frames for which each image set in sub_input_sequence is prepared
     """
     sub_input_sequence = []
     sub_label_sequence = []
     
     dataPaths = []
+
     # Returns test data if we are not training
     if not config.is_train:
         for lsts in data:
             
-             # Sets default upper bound for image processing loop for list lsts
-             ubound = len(lsts) - 1
-             lbound = 0
+            # Sets default upper bound for image processing loop for list lsts
+            ubound = len(lsts) - 1
+            lbound = 0
              
-             if (config.train_mode == 1 or config.train_mode == 3 or \
-                 config.train_mode == 6):
-                 ubound = len(lsts)     
-             elif (config.train_mode == 2 or config.train_mode == 5):
-                 ubound = len(lsts) - 1
-                 lbound = 1
+            if config.train_mode == 1 or config.train_mode == 3 or \
+                config.train_mode == 6:
+                ubound = len(lsts)
+            elif config.train_mode == 2 or config.train_mode == 5:
+                ubound = len(lsts) - 1
+                lbound = 1
              
-             #Inits dataset list for mode 5
-             dataSet = []
-             
-             # Loops over all images in lsts
-             for i in range(lbound, ubound):
-                 print('Processing image at: ' + lsts[i]) 
-                 dataPaths.append(lsts[i])
+            # Inits dataset list for mode 5
+            dataSet = []
+
+            # Loops over all images in lsts
+            for i in range(lbound, ubound):
+                print('Processing image at: ' + lsts[i])
+                dataPaths.append(lsts[i])
                  
-                 input_data = []
-                 if config.train_mode == 0:
+                input_data = []
+                if config.train_mode == 0:
                         
-                     # Prepares test frame set using frame i and frame i+1
-                     input_ = imread(lsts[i]) / 255.0
-                     inputNext_ = imread(lsts[i+1]) / 255.0
-                     input_data = np.dstack((input_, inputNext_))
-                 elif config.train_mode == 1 or config.train_mode == 3 \
-                 or config.train_mode == 4 or config.train_mode == 6:
+                    # Prepares test frame set using frame i and frame i+1
+                    input_ = imread(lsts[i]) / 255.0
+                    inputNext_ = imread(lsts[i+1]) / 255.0
+                    input_data = np.dstack((input_, inputNext_))
+                elif config.train_mode == 1 or config.train_mode == 3 \
+                        or config.train_mode == 4 or config.train_mode == 6:
                         
-                     # Prepares test frame set using frame i
-                     input_ = imread(lsts[i]) / 255.0
-                     input_data = input_
-                 elif config.train_mode == 2 or config.train_mode == 5:
+                    # Prepares test frame set using frame i
+                    input_ = imread(lsts[i]) / 255.0
+                    input_data = input_
+                elif config.train_mode == 2 or config.train_mode == 5:
                      
-                     # Prepares test frame set using frame i, frame i+1
-                     # frame i-1
-                     input_ = imread(lsts[i]) / 255.0
-                     inputNext_ = imread(lsts[i+1]) / 255.0
-                     inputPrev_ = imread(lsts[i-1]) / 255.0
+                    # Prepares test frame set using frame i, frame i+1
+                    # frame i-1
+                    input_ = imread(lsts[i]) / 255.0
+                    inputNext_ = imread(lsts[i+1]) / 255.0
+                    inputPrev_ = imread(lsts[i-1]) / 255.0
                      
-                     input_data = np.dstack((input_, inputPrev_, inputNext_))
+                    input_data = np.dstack((input_, inputPrev_, inputNext_))
                  
-                 if(config.train_mode !=5 and config.train_mode != 6):
-                     sub_input_sequence.append(input_data)
-                 else:
-                     dataSet.append(input_data)
-             if(config.train_mode == 5 or config.train_mode == 6):
-                 sub_input_sequence.append(dataSet)   
+                if config.train_mode != 5 and config.train_mode != 6:
+                    sub_input_sequence.append(input_data)
+                else:
+                    dataSet.append(input_data)
+            if config.train_mode == 5 or config.train_mode == 6:
+                sub_input_sequence.append(dataSet)
         return sub_input_sequence, sub_label_sequence, dataPaths
         
     for lsts in data:
         
         # Sets default upper bound for image processing loop for list lsts
         ubound = len(lsts) - 1
-        lbound = 1 
+        lbound = 1
+
         # Sets bound to loop over all images in data if train mode is 1
-        if(config.train_mode == 1 or config.train_mode == 4):
+        if config.train_mode == 1 or config.train_mode == 4:
             ubound = len(lsts)
             lbound = 0
             
@@ -294,25 +380,27 @@ def make_sub_data(data, config):
             print('Processing image at: ' + lsts[i]) 
             input_, label_, = preprocess(lsts[i], config.scale) 
             
-            if (config.train_mode == 0 or config.train_mode == 2):
+            if config.train_mode == 0 or config.train_mode == 2:
                 input_prev, _ = preprocess(lsts[i-1], config.scale)
                 input_next, _ = preprocess(lsts[i+1], config.scale)
-            
-            
-            if len(input_.shape) == 3: # is color
+
+            if len(input_.shape) == 3:
+
+                # is color
                 h, w, c = input_.shape
             else:
-                h, w = input_.shape # is grayscale
+
+                # is grayscale
+                h, w = input_.shape
                 
             # NOTE: make subimage of LR and HR
             # Input 
             for x in range(0, h - config.image_size + 1, config.stride):
                 for y in range(0, w - config.image_size + 1, config.stride):
-                    
-                    
+
                     # Retrieves sub frames from prev and next frames if
                     # train mode is 0 or 2
-                    if (config.train_mode == 0 or config.train_mode == 2):
+                    if config.train_mode == 0 or config.train_mode == 2:
                         sub_input_prev = input_prev[x: x + config.image_size,
                                                     y: y + config.image_size]
                         sub_input_next = input_next[x: x + config.image_size,
@@ -321,13 +409,13 @@ def make_sub_data(data, config):
                         # Reshapes subframes from prev and next frames if
                         # train_mode is 0 or 2
                         sub_input_prev = \
-                              sub_input_prev.reshape([config.image_size,
-                                                  config.image_size,
-                                                  config.c_dim])
+                            sub_input_prev.reshape([config.image_size,
+                                                    config.image_size,
+                                                    config.c_dim])
                         sub_input_next = \
-                          sub_input_next.reshape([config.image_size,
-                                                  config.image_size, 
-                                                  config.c_dim])
+                            sub_input_next.reshape([config.image_size,
+                                                    config.image_size,
+                                                    config.c_dim])
                         
                         # Normalizes sub input frames
                         sub_input_prev = sub_input_prev / 255.0
@@ -342,9 +430,8 @@ def make_sub_data(data, config):
                                                    config.image_size,
                                                    config.c_dim])
                     # Normializes sub_input
-                    sub_input =  sub_input / 255.0
-                    
-                    
+                    sub_input = sub_input / 255.0
+
                     if config.train_mode == 0:
                         
                         # Prepares one frame pair if train_mode == 0
@@ -363,12 +450,11 @@ def make_sub_data(data, config):
                         
                         # Prepares subframe tensors curr-prev frames and 
                         # curr-next frames
-                        # Each tensor is of shape (h, w, (2*c_dim))
+                        # Each tensor is of shape (h, w, (3*c_dim))
                         sub_curr_prev_next = np.dstack((sub_input,
                                                         sub_input_prev,
                                                         sub_input_next))
-                        
-                        
+
                         # Prepares sub_input_data of shape (2, l, w, 2*c_dim)
                         sub_input_data = np.array(sub_curr_prev_next)
                         del sub_input
@@ -403,8 +489,8 @@ def make_sub_data(data, config):
                                                        * config.scale,
                                                        config.c_dim])
                         
-                        # Normialize
-                        sub_label =  sub_label / 255.0
+                        # Normalizes sub_label
+                        sub_label = sub_label / 255.0
                         
                         # Add to sequence
                         sub_label_sequence.append(sub_label)
@@ -422,10 +508,10 @@ def make_sub_data(data, config):
                                                        config.image_size,
                                                        config.c_dim])
                         
-                        # Normialize
-                        sub_label =  sub_label / 255.0
+                        # Normalizes sub_label
+                        sub_label = sub_label / 255.0
                         
-                        # Add to sequence
+                        # Adds to sequence
                         sub_label_sequence.append(sub_label)
                         del sub_label
 
@@ -433,64 +519,85 @@ def make_sub_data(data, config):
 
 
 def read_data(path, config):
-    """
-        Read h5 format data file
 
-        Args:
-            path: file path of desired file
-            data: '.h5' file format that contains  input values
-            label: '.h5' file format that contains label values 
+    """
+        Reads h5 format data file from path. Mode 5 and 6 requires
+        additional loading of image paths and number of image sets.
+
+        Inputs:
+        path: file path of h5 file
+        config: config from FLAGS of main.py
+
+        Returns:
+        input_: loaded inputs
+        label_: loaded labels
+        dataPaths: loaded dataPaths
+
     """
     dataPaths = []
     input_ = []
-    
+
+    # Prepares path of image path file and number of image sets file
     fileDir = os.path.split(path)[0]
     numImgSetsDir = os.path.join(fileDir, 'numImgSets.txt')
     pathsDir = os.path.join(fileDir, 'paths.txt')
-    
-    if(config.train_mode == 5 or config.train_mode == 6):
+
+    # Loads image paths and number of image sets from files if train mode is 5 or 6
+    if config.train_mode == 5 or config.train_mode == 6:
         
         print('Loading number of image sets and image paths...')
         
         # Gets number of image sets from file
-        f=open(numImgSetsDir, 'r')
+        f = open(numImgSetsDir, 'r')
         numImgSets = int((f.readline()).strip('\n'))
         f.close()
         
         # Loads image paths from file
-        f=open(pathsDir, 'r')
+        f = open(pathsDir, 'r')
         paths = f.readlines()
-            
+
+        # Loads list of image paths
         for i in range(len(paths)):
             dataPaths.append(paths[i].strip('\n'))
         f.close()
         
     with h5py.File(path, 'r') as hf:
         
-        if(config.train_mode != 5 and config.train_mode != 6):
+        if config.train_mode != 5 and config.train_mode != 6:
+
+            # Loads input from hf file
             input_ = np.array(hf.get('input'))
         else:
             
-             # Prepares testing image sets 
-             for i in range(numImgSets):
+            # Loads image sets from hf file and appends to input_ list
+            for i in range(numImgSets):
                  
-                 print('Loading data set ' + str(i) + ' ...')
-                 input_.append(np.array(hf.get('input' + str(i))))
+                print('Loading data set ' + str(i) + ' ...')
+                input_.append(np.array(hf.get('input' + str(i))))
             
         label_ = np.array(hf.get('label'))
-        
-    
+
     return input_, label_, dataPaths
 
+
 def make_data_hf(input_, label_, dataPaths, config):
+
     """
-        Make input data as h5 file format
-        Depending on "is_train" (flag value), savepath would be change.
+        This method makes training or testing as h5 file format. Mode 5 and Mode 6
+        multi-dir modes require additional saves of dataPaths and number of image set
+        numpy arrays in input_ list.
+
+        Inputs:
+        input_: inputs to be saved
+        label_: labels to be saved
+        dataPaths: dataPaths of data from which each sample in input_ is prepared
+        config: config from FLAGS of main.py
+
     """
     
     # Check the check dir, if not, create one
-    if not os.path.isdir(os.path.join(os.getcwd(),config.checkpoint_dir)):
-        os.makedirs(os.path.join(os.getcwd(),config.checkpoint_dir))
+    if not os.path.isdir(os.path.join(os.getcwd(), config.checkpoint_dir)):
+        os.makedirs(os.path.join(os.getcwd(), config.checkpoint_dir))
 
     if config.is_train:
         savepath = os.path.join(os.getcwd(), config.checkpoint_dir 
@@ -501,7 +608,9 @@ def make_data_hf(input_, label_, dataPaths, config):
     
     print('Saving prepared data...')
     with h5py.File(savepath, 'w') as hf:
-        if (config.train_mode !=5  and config.train_mode != 6):
+
+        # Creates single dataset for input_ and label_ if mode is not multi-dir
+        if config.train_mode != 5 and config.train_mode != 6:
             hf.create_dataset('input', data=input_)
             hf.create_dataset('label', data=label_)
         else:
@@ -514,26 +623,31 @@ def make_data_hf(input_, label_, dataPaths, config):
             hf.create_dataset('label', data=label_)
     
     # Saves dataPaths and number of imageSets
-    if(config.train_mode == 5 or config.train_mode == 6):
+    if config.train_mode == 5 or config.train_mode == 6:
         
         print('Saving image paths and number of image sets...')
         
         # Saves image paths to file
-        f = open(os.path.join(os.path.join(os.getcwd(), config.checkpoint_dir) , 'paths.txt'), 'w')
+        f = open(os.path.join(os.path.join(os.getcwd(), config.checkpoint_dir), 'paths.txt'), 'w')
         for i in range(len(dataPaths)):
             f.write(dataPaths[i]+'\n')
         f.close()
-        
-        
+
         # Saves number of image sets to file
-        f = open(os.path.join(os.path.join(os.getcwd(), config.checkpoint_dir) , 'numImgSets.txt'), 'w')
+        f = open(os.path.join(os.path.join(os.getcwd(), config.checkpoint_dir), 'numImgSets.txt'), 'w')
         f.write(str(len(input_))+'\n')
         f.close()    
 
+
 def input_setup(config):
+
     """
-        Read image files and make their sub-images and saved them as a 
-        h5 file format
+       This method reads video sequences and prepares training or testing data,
+       which are saved as h5 file format.
+
+       Input:
+       config: config from FLAGS of main.py
+
     """
 
     # Load data path, if is_train False, get test data
@@ -545,13 +659,13 @@ def input_setup(config):
     sub_input_sequence, sub_label_sequence, dataPaths = make_sub_data(data, config)
     
     # Turn input data list to numpy array. With this transform
-    # training mode = 0 => [?, size, size, 6]
-    # training mode = 2 => [?, 2, size, size, 3]
-    # training mode = 1 => [? size, size, 3]
-    # training mode = 3 or 4 =>[?, size, size, 3]
-    # training mode = 5 (test only) => list of np array of shape: [?, size, size, 9]
-    # training mode = 6 (test only) => list of np array of shape: [?, size, size, 3]
-    if(config.train_mode != 5 and config.train_mode != 6):
+    # training mode = 0 => [?, size, size, 6] (training) or [?, h, w, 6] (testing)
+    # training mode = 2 => [?, size, size, 9] (training) or [?, h, w, 9] (testing)
+    # training mode = 1 => [? size, size, 3] (training) or [?, h, w, 3] (testing)
+    # training mode = 3 or 4 =>[?, size, size, 3] (training) or [?, h, w, 3] (testing)
+    # training mode = 5 (test only) => list of np arrays of shape: [?, size, size, 9]
+    # training mode = 6 (test only) => list of np arrays of shape: [?, size, size, 3]
+    if config.train_mode != 5 and config.train_mode != 6:
         arrinput = np.asarray(sub_input_sequence)
     else:
         
@@ -560,11 +674,11 @@ def input_setup(config):
         for i in range(len(sub_input_sequence)):
             arrinput.append(np.asarray(sub_input_sequence[i]))
     
-    # [?, size , size, 3]
+    # [?, size , size, 3] (training) or [?, h, w, 3] (testing)
     arrlabel = np.asarray(sub_label_sequence) 
     
     # Prints shapes of prepared input data if training_mode != 5 or 6
-    if(config.train_mode != 5 and config.train_mode != 6):
+    if config.train_mode != 5 and config.train_mode != 6:
         print('Input data shape: ', arrinput.shape)
         print('Labels data shape: ', arrlabel.shape)
     make_data_hf(arrinput, arrlabel, dataPaths, config)
