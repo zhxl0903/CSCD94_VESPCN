@@ -1,0 +1,1603 @@
+PSNR for imageSet v0s0
+
+PSNR for image 0: 51.668213913193604
+PSNR for image 1: 45.526496981909844
+PSNR for image 2: 42.059393523631094
+PSNR for image 3: 40.49822973924351
+PSNR for image 4: 37.86738103617714
+PSNR for image 5: 35.65012036570812
+PSNR for image 6: 34.93087697831407
+PSNR for image 7: 33.26659259644685
+PSNR for image 8: 32.381625489060745
+PSNR for image 9: 31.234186597256933
+PSNR for image 10: 30.688812836202352
+PSNR for image 11: 29.907178876546197
+PSNR for image 12: 29.531312516261735
+PSNR for image 13: 28.48798183308826
+PSNR for image 14: 27.4147348373536
+PSNR for image 15: 26.624886380786158
+PSNR for image 16: 26.80803750182513
+PSNR for image 17: 26.689832344339706
+PSNR for image 18: 26.907285555372773
+PSNR for image 19: 26.576414317868394
+PSNR for image 20: 26.70804589599319
+PSNR for image 21: 26.842059828721474
+PSNR for image 22: 26.765441424517466
+Average PSNR for image set v0s0 : 32.392832233470365
+PSNR for imageSet v0s1
+
+PSNR for image 0: 27.515630651040635
+PSNR for image 1: 28.359363131217
+PSNR for image 2: 28.69179853463325
+PSNR for image 3: 29.508710671370565
+PSNR for image 4: 29.055947391049344
+PSNR for image 5: 30.0275916960172
+PSNR for image 6: 29.347883201475682
+PSNR for image 7: 29.63124601852477
+PSNR for image 8: 29.567529085440192
+PSNR for image 9: 29.137785440042748
+PSNR for image 10: 28.050727631619772
+PSNR for image 11: 27.55496709260964
+PSNR for image 12: 26.918029348887963
+PSNR for image 13: 26.803567185625266
+PSNR for image 14: 26.70993792841156
+PSNR for image 15: 26.440098459880026
+PSNR for image 16: 26.43203703367081
+PSNR for image 17: 26.518143634869972
+PSNR for image 18: 26.638180532669526
+PSNR for image 19: 26.32689464236993
+PSNR for image 20: 26.23133221249279
+PSNR for image 21: 26.39979539670763
+PSNR for image 22: 26.203807856008247
+Average PSNR for image set v0s1 : 27.74221759898411
+PSNR for imageSet v0s2
+
+PSNR for image 0: 28.554911178763906
+PSNR for image 1: 28.38560421653424
+PSNR for image 2: 28.810883220972116
+PSNR for image 3: 28.32331916159792
+PSNR for image 4: 27.87157917756857
+PSNR for image 5: 28.231038117933597
+PSNR for image 6: 27.773319605803877
+PSNR for image 7: 27.84820261328848
+PSNR for image 8: 27.58654416049001
+PSNR for image 9: 27.44817914734329
+PSNR for image 10: 27.83770711643335
+PSNR for image 11: 27.4804570213185
+PSNR for image 12: 27.74808152781492
+PSNR for image 13: 27.633188198671327
+PSNR for image 14: 27.658711648869666
+PSNR for image 15: 28.147272984101996
+PSNR for image 16: 27.62821710550336
+PSNR for image 17: 27.883777474830342
+PSNR for image 18: 27.510890231308434
+PSNR for image 19: 27.364902734605327
+PSNR for image 20: 27.8687787980543
+PSNR for image 21: 27.505467977230666
+PSNR for image 22: 27.8592929304143
+Average PSNR for image set v0s2 : 27.86784027606316
+PSNR for imageSet video (1)_0
+
+PSNR for image 0: 38.07928388586384
+PSNR for image 1: 34.41275566138225
+PSNR for image 2: 37.76301110640152
+Average PSNR for image set video (1)_0 : 36.75168355121587
+PSNR for imageSet video (1)_1
+
+PSNR for image 0: 33.73952618650408
+PSNR for image 1: 33.72564973938988
+PSNR for image 2: 33.69977233738785
+Average PSNR for image set video (1)_1 : 33.721649421093936
+PSNR for imageSet video (1)_10
+
+PSNR for image 0: 35.2642461883415
+PSNR for image 1: 35.62438405117518
+PSNR for image 2: 35.147903268137135
+Average PSNR for image set video (1)_10 : 35.345511169217936
+PSNR for imageSet video (1)_11
+
+PSNR for image 0: 32.00550010562471
+PSNR for image 1: 31.45466245766063
+PSNR for image 2: 31.483470891053233
+Average PSNR for image set video (1)_11 : 31.647877818112857
+PSNR for imageSet video (1)_12
+
+PSNR for image 0: 36.60732787393242
+PSNR for image 1: 37.29209539924945
+PSNR for image 2: 36.67434713565912
+Average PSNR for image set video (1)_12 : 36.85792346961366
+PSNR for imageSet video (1)_13
+
+PSNR for image 0: 32.91526177000566
+PSNR for image 1: 32.91420557618699
+PSNR for image 2: 32.91475704107342
+Average PSNR for image set video (1)_13 : 32.91474146242202
+PSNR for imageSet video (1)_2
+
+PSNR for image 0: 34.594476291639076
+PSNR for image 1: 34.73419405642992
+PSNR for image 2: 34.352862151493355
+Average PSNR for image set video (1)_2 : 34.56051083318745
+PSNR for imageSet video (1)_3
+
+PSNR for image 0: 33.63339892503213
+PSNR for image 1: 33.80989980595071
+PSNR for image 2: 33.50918552563349
+Average PSNR for image set video (1)_3 : 33.65082808553877
+PSNR for imageSet video (1)_4
+
+PSNR for image 0: 33.55576082171651
+PSNR for image 1: 33.83377355229889
+PSNR for image 2: 33.4602253501373
+Average PSNR for image set video (1)_4 : 33.616586574717566
+PSNR for imageSet video (1)_5
+
+PSNR for image 0: 33.64813709498652
+PSNR for image 1: 33.384724756384905
+PSNR for image 2: 33.61520302721018
+Average PSNR for image set video (1)_5 : 33.5493549595272
+PSNR for imageSet video (1)_6
+
+PSNR for image 0: 34.05063296207474
+PSNR for image 1: 33.727329862364435
+PSNR for image 2: 34.37422220303041
+Average PSNR for image set video (1)_6 : 34.05072834248986
+PSNR for imageSet video (1)_7
+
+PSNR for image 0: 33.11751632511911
+PSNR for image 1: 33.21478125552059
+PSNR for image 2: 32.804120470482346
+Average PSNR for image set video (1)_7 : 33.04547268370735
+PSNR for imageSet video (1)_8
+
+PSNR for image 0: 32.528523405670484
+PSNR for image 1: 32.04021351469865
+PSNR for image 2: 32.02194771361427
+Average PSNR for image set video (1)_8 : 32.19689487799447
+PSNR for imageSet video (1)_9
+
+PSNR for image 0: 32.53187204427235
+PSNR for image 1: 32.79584681893843
+PSNR for image 2: 32.64264952977478
+Average PSNR for image set video (1)_9 : 32.65678946432852
+PSNR for imageSet video (10)_0
+
+PSNR for image 0: 36.67629158549714
+PSNR for image 1: 36.70660822762168
+PSNR for image 2: 36.67164504678355
+Average PSNR for image set video (10)_0 : 36.68484828663413
+PSNR for imageSet video (10)_1
+
+PSNR for image 0: 34.13710013118611
+PSNR for image 1: 34.12177713419235
+PSNR for image 2: 34.090393412400985
+Average PSNR for image set video (10)_1 : 34.116423559259815
+PSNR for imageSet video (10)_10
+
+PSNR for image 0: 33.41049569558407
+PSNR for image 1: 33.68307971989303
+PSNR for image 2: 33.28812323208906
+Average PSNR for image set video (10)_10 : 33.46056621585539
+PSNR for imageSet video (10)_11
+
+PSNR for image 0: 36.58614746394383
+PSNR for image 1: 36.43923699147679
+PSNR for image 2: 36.78929221328918
+Average PSNR for image set video (10)_11 : 36.60489222290327
+PSNR for imageSet video (10)_12
+
+PSNR for image 0: 33.16515264422511
+PSNR for image 1: 33.14125865981434
+PSNR for image 2: 33.112733003662626
+Average PSNR for image set video (10)_12 : 33.139714769234025
+PSNR for imageSet video (10)_13
+
+PSNR for image 0: 37.10170338797844
+PSNR for image 1: 36.790293404427295
+PSNR for image 2: 36.65695616130181
+Average PSNR for image set video (10)_13 : 36.84965098456918
+PSNR for imageSet video (10)_14
+
+PSNR for image 0: 33.172838586914935
+PSNR for image 1: 32.889491404232125
+PSNR for image 2: 32.90636154616027
+Average PSNR for image set video (10)_14 : 32.98956384576911
+PSNR for imageSet video (10)_2
+
+PSNR for image 0: 33.27636270637863
+PSNR for image 1: 33.18416759439498
+PSNR for image 2: 33.13076443745507
+Average PSNR for image set video (10)_2 : 33.19709824607622
+PSNR for imageSet video (10)_3
+
+PSNR for image 0: 33.12270022400797
+PSNR for image 1: 32.940635150487
+PSNR for image 2: 32.901085463006034
+Average PSNR for image set video (10)_3 : 32.988140279167
+PSNR for imageSet video (10)_4
+
+PSNR for image 0: 35.339161653538895
+PSNR for image 1: 35.54239870509574
+PSNR for image 2: 35.354819521000486
+Average PSNR for image set video (10)_4 : 35.41212662654504
+PSNR for imageSet video (10)_5
+
+PSNR for image 0: 35.855877264957876
+PSNR for image 1: 36.49526128264023
+PSNR for image 2: 35.77028431058399
+Average PSNR for image set video (10)_5 : 36.0404742860607
+PSNR for imageSet video (10)_6
+
+PSNR for image 0: 33.23815794397043
+PSNR for image 1: 33.56813334749436
+PSNR for image 2: 32.88920612176668
+Average PSNR for image set video (10)_6 : 33.231832471077155
+PSNR for imageSet video (10)_7
+
+PSNR for image 0: 34.31641371542981
+PSNR for image 1: 34.309961781666
+PSNR for image 2: 34.707867363827766
+Average PSNR for image set video (10)_7 : 34.44474762030786
+PSNR for imageSet video (10)_8
+
+PSNR for image 0: 35.52686398062361
+PSNR for image 1: 36.17133936076603
+PSNR for image 2: 36.12192829902971
+Average PSNR for image set video (10)_8 : 35.94004388013979
+PSNR for imageSet video (10)_9
+
+PSNR for image 0: 33.8649444492645
+PSNR for image 1: 33.854348036062035
+PSNR for image 2: 33.7652115089847
+Average PSNR for image set video (10)_9 : 33.828167998103744
+PSNR for imageSet video (12)_0
+
+PSNR for image 0: 33.913459186355944
+PSNR for image 1: 33.92885985530969
+PSNR for image 2: 33.936835897188125
+Average PSNR for image set video (12)_0 : 33.92638497961792
+PSNR for imageSet video (12)_1
+
+PSNR for image 0: 33.31847653806633
+PSNR for image 1: 33.51570730199552
+PSNR for image 2: 33.36078950204259
+Average PSNR for image set video (12)_1 : 33.39832444736815
+PSNR for imageSet video (12)_10
+
+PSNR for image 0: 32.93686700505822
+PSNR for image 1: 32.76467861013148
+PSNR for image 2: 32.76543475712531
+Average PSNR for image set video (12)_10 : 32.822326790771676
+PSNR for imageSet video (12)_11
+
+PSNR for image 0: 31.773886541996372
+PSNR for image 1: 31.479746602310435
+PSNR for image 2: 31.859302611516224
+Average PSNR for image set video (12)_11 : 31.704311918607676
+PSNR for imageSet video (12)_12
+
+PSNR for image 0: 34.19743868974174
+PSNR for image 1: 34.040061758522256
+PSNR for image 2: 34.14824285661467
+Average PSNR for image set video (12)_12 : 34.128581101626224
+PSNR for imageSet video (12)_13
+
+PSNR for image 0: 34.47771670627449
+PSNR for image 1: 34.35946835385259
+PSNR for image 2: 34.46788909740615
+Average PSNR for image set video (12)_13 : 34.43502471917774
+PSNR for imageSet video (12)_14
+
+PSNR for image 0: 33.48320240688149
+PSNR for image 1: 33.379503383788425
+PSNR for image 2: 33.48786145284428
+Average PSNR for image set video (12)_14 : 33.450189081171395
+PSNR for imageSet video (12)_2
+
+PSNR for image 0: 34.38874599623989
+PSNR for image 1: 34.17717992269542
+PSNR for image 2: 34.22219449487834
+Average PSNR for image set video (12)_2 : 34.26270680460455
+PSNR for imageSet video (12)_3
+
+PSNR for image 0: 34.79777379248927
+PSNR for image 1: 34.67957166780521
+PSNR for image 2: 34.64997648530939
+Average PSNR for image set video (12)_3 : 34.709107315201294
+PSNR for imageSet video (12)_4
+
+PSNR for image 0: 38.772352233008064
+PSNR for image 1: 39.200201600824954
+PSNR for image 2: 39.66736913875133
+Average PSNR for image set video (12)_4 : 39.21330765752811
+PSNR for imageSet video (12)_5
+
+PSNR for image 0: 28.704011758023604
+PSNR for image 1: 28.692767664036637
+PSNR for image 2: 28.654093378678645
+Average PSNR for image set video (12)_5 : 28.68362426691296
+PSNR for imageSet video (12)_6
+
+PSNR for image 0: 31.387758335725092
+PSNR for image 1: 31.396448200096373
+PSNR for image 2: 31.459320658831555
+Average PSNR for image set video (12)_6 : 31.414509064884342
+PSNR for imageSet video (12)_7
+
+PSNR for image 0: 31.52217774485048
+PSNR for image 1: 31.472212838715382
+PSNR for image 2: 31.40708984876348
+Average PSNR for image set video (12)_7 : 31.46716014410978
+PSNR for imageSet video (12)_8
+
+PSNR for image 0: 32.97904233201684
+PSNR for image 1: 33.02912855488537
+PSNR for image 2: 33.045110438749845
+Average PSNR for image set video (12)_8 : 33.017760441884015
+PSNR for imageSet video (12)_9
+
+PSNR for image 0: 33.02940954801453
+PSNR for image 1: 32.97477739174005
+PSNR for image 2: 32.84919253167971
+Average PSNR for image set video (12)_9 : 32.951126490478096
+PSNR for imageSet video (13)_0
+
+PSNR for image 0: 34.27686572735996
+PSNR for image 1: 34.21361215181293
+PSNR for image 2: 33.939342876229865
+Average PSNR for image set video (13)_0 : 34.143273585134246
+PSNR for imageSet video (13)_1
+
+PSNR for image 0: 33.1397822791837
+PSNR for image 1: 33.154821695688014
+PSNR for image 2: 32.739099376224274
+Average PSNR for image set video (13)_1 : 33.01123445036533
+PSNR for imageSet video (13)_10
+
+PSNR for image 0: 31.438425559038663
+PSNR for image 1: 31.205953384352064
+PSNR for image 2: 31.513405899436947
+Average PSNR for image set video (13)_10 : 31.38592828094256
+PSNR for imageSet video (13)_11
+
+PSNR for image 0: 31.01807952863672
+PSNR for image 1: 30.56316091409046
+PSNR for image 2: 30.765067892781197
+Average PSNR for image set video (13)_11 : 30.782102778502793
+PSNR for imageSet video (13)_12
+
+PSNR for image 0: 26.064160203197503
+PSNR for image 1: 26.079161966950704
+PSNR for image 2: 25.88282407879837
+Average PSNR for image set video (13)_12 : 26.00871541631553
+PSNR for imageSet video (13)_13
+
+PSNR for image 0: 34.4410359622281
+PSNR for image 1: 34.589744578653836
+PSNR for image 2: 34.35168986248057
+Average PSNR for image set video (13)_13 : 34.4608234677875
+PSNR for imageSet video (13)_14
+
+PSNR for image 0: 33.76234201980628
+PSNR for image 1: 33.65307849030793
+PSNR for image 2: 33.50862477662902
+Average PSNR for image set video (13)_14 : 33.64134842891441
+PSNR for imageSet video (13)_2
+
+PSNR for image 0: 32.52989923469938
+PSNR for image 1: 32.2649524645784
+PSNR for image 2: 32.52196569147301
+Average PSNR for image set video (13)_2 : 32.43893913025027
+PSNR for imageSet video (13)_3
+
+PSNR for image 0: 33.15722652669879
+PSNR for image 1: 33.52474500995497
+PSNR for image 2: 34.08301739769362
+Average PSNR for image set video (13)_3 : 33.588329644782455
+PSNR for imageSet video (13)_4
+
+PSNR for image 0: 34.73424122578854
+PSNR for image 1: 34.65207948076544
+PSNR for image 2: 34.63875988889994
+Average PSNR for image set video (13)_4 : 34.6750268651513
+PSNR for imageSet video (13)_5
+
+PSNR for image 0: 35.82055537473964
+PSNR for image 1: 35.993742342585854
+PSNR for image 2: 35.931404628839616
+Average PSNR for image set video (13)_5 : 35.91523411538837
+PSNR for imageSet video (13)_6
+
+PSNR for image 0: 31.48778300463734
+PSNR for image 1: 31.09758076609223
+PSNR for image 2: 31.390928854013804
+Average PSNR for image set video (13)_6 : 31.32543087491446
+PSNR for imageSet video (13)_7
+
+PSNR for image 0: 34.32642770760011
+PSNR for image 1: 34.263538034454605
+PSNR for image 2: 34.006621923044584
+Average PSNR for image set video (13)_7 : 34.198862555033095
+PSNR for imageSet video (13)_8
+
+PSNR for image 0: 36.025861905544716
+PSNR for image 1: 36.211042718071255
+PSNR for image 2: 36.183152186045696
+Average PSNR for image set video (13)_8 : 36.14001893655389
+PSNR for imageSet video (13)_9
+
+PSNR for image 0: 29.647857851476886
+PSNR for image 1: 29.637265784925354
+PSNR for image 2: 29.460259538792748
+Average PSNR for image set video (13)_9 : 29.581794391731663
+PSNR for imageSet video (16)_0
+
+PSNR for image 0: 27.586420187199412
+PSNR for image 1: 27.55194436209068
+PSNR for image 2: 27.5492093776144
+Average PSNR for image set video (16)_0 : 27.562524642301497
+PSNR for imageSet video (16)_1
+
+PSNR for image 0: 29.346542921456475
+PSNR for image 1: 29.293203797020393
+PSNR for image 2: 29.372894451835187
+Average PSNR for image set video (16)_1 : 29.33754705677069
+PSNR for imageSet video (16)_10
+
+PSNR for image 0: 29.4679730178659
+PSNR for image 1: 29.456075532123055
+PSNR for image 2: 29.132574686173136
+Average PSNR for image set video (16)_10 : 29.352207745387364
+PSNR for imageSet video (16)_11
+
+PSNR for image 0: 27.385067673309496
+PSNR for image 1: 27.38400731733772
+PSNR for image 2: 27.383224274611212
+Average PSNR for image set video (16)_11 : 27.38409975508614
+PSNR for imageSet video (16)_12
+
+PSNR for image 0: 28.064136679476025
+PSNR for image 1: 28.06442369183539
+PSNR for image 2: 28.06518453206042
+Average PSNR for image set video (16)_12 : 28.06458163445728
+PSNR for imageSet video (16)_13
+
+PSNR for image 0: 29.918723725109086
+PSNR for image 1: 29.943074810107355
+PSNR for image 2: 29.93193814296944
+Average PSNR for image set video (16)_13 : 29.931245559395293
+PSNR for imageSet video (16)_14
+
+PSNR for image 0: 29.88683414716675
+PSNR for image 1: 29.887389348763058
+PSNR for image 2: 29.86732607328067
+Average PSNR for image set video (16)_14 : 29.880516523070156
+PSNR for imageSet video (16)_2
+
+PSNR for image 0: 25.819349606599914
+PSNR for image 1: 25.82003912312807
+PSNR for image 2: 25.82237616565797
+Average PSNR for image set video (16)_2 : 25.820588298461985
+PSNR for imageSet video (16)_3
+
+PSNR for image 0: 29.945966378258134
+PSNR for image 1: 29.93989075549188
+PSNR for image 2: 29.878543266803362
+Average PSNR for image set video (16)_3 : 29.921466800184458
+PSNR for imageSet video (16)_4
+
+PSNR for image 0: 29.54422472707046
+PSNR for image 1: 29.47034797860134
+PSNR for image 2: 29.66016132834548
+Average PSNR for image set video (16)_4 : 29.55824467800576
+PSNR for imageSet video (16)_5
+
+PSNR for image 0: 29.72732208898554
+PSNR for image 1: 29.708981169608787
+PSNR for image 2: 29.643600728737862
+Average PSNR for image set video (16)_5 : 29.693301329110728
+PSNR for imageSet video (16)_6
+
+PSNR for image 0: 29.070787664961898
+PSNR for image 1: 29.006165245881355
+PSNR for image 2: 29.03658903824201
+Average PSNR for image set video (16)_6 : 29.037847316361752
+PSNR for imageSet video (16)_7
+
+PSNR for image 0: 29.641413414365744
+PSNR for image 1: 29.647073639191973
+PSNR for image 2: 29.69820057976749
+Average PSNR for image set video (16)_7 : 29.6622292111084
+PSNR for imageSet video (16)_8
+
+PSNR for image 0: 28.022504201639652
+PSNR for image 1: 28.05719866731942
+PSNR for image 2: 28.383752425335175
+Average PSNR for image set video (16)_8 : 28.154485098098082
+PSNR for imageSet video (16)_9
+
+PSNR for image 0: 29.52104933985183
+PSNR for image 1: 29.51962525960523
+PSNR for image 2: 29.504593534873173
+Average PSNR for image set video (16)_9 : 29.515089378110076
+PSNR for imageSet video (19)_0
+
+PSNR for image 0: 37.99108074021963
+PSNR for image 1: 37.211274890558656
+PSNR for image 2: 37.1472251856728
+Average PSNR for image set video (19)_0 : 37.44986027215037
+PSNR for imageSet video (19)_1
+
+PSNR for image 0: 31.926204796179082
+PSNR for image 1: 32.124817556413824
+PSNR for image 2: 32.54988779985782
+Average PSNR for image set video (19)_1 : 32.20030338415024
+PSNR for imageSet video (19)_10
+
+PSNR for image 0: 33.15673412285224
+PSNR for image 1: 33.04498522101081
+PSNR for image 2: 33.19169044768228
+Average PSNR for image set video (19)_10 : 33.13113659718178
+PSNR for imageSet video (19)_11
+
+PSNR for image 0: 33.03938926214961
+PSNR for image 1: 33.167661926381996
+PSNR for image 2: 33.18082085546315
+Average PSNR for image set video (19)_11 : 33.12929068133159
+PSNR for imageSet video (19)_12
+
+PSNR for image 0: 33.179828239006824
+PSNR for image 1: 33.291008743262594
+PSNR for image 2: 33.24070210054305
+Average PSNR for image set video (19)_12 : 33.23717969427082
+PSNR for imageSet video (19)_13
+
+PSNR for image 0: 32.83370304996644
+PSNR for image 1: 33.02062218382778
+PSNR for image 2: 33.39975722834857
+Average PSNR for image set video (19)_13 : 33.08469415404759
+PSNR for imageSet video (19)_14
+
+PSNR for image 0: 33.76750444771573
+PSNR for image 1: 33.485033519933374
+PSNR for image 2: 33.62158148029659
+Average PSNR for image set video (19)_14 : 33.62470648264857
+PSNR for imageSet video (19)_2
+
+PSNR for image 0: 32.41920769599629
+PSNR for image 1: 32.57389661276725
+PSNR for image 2: 32.55227195021653
+Average PSNR for image set video (19)_2 : 32.51512541966002
+PSNR for imageSet video (19)_3
+
+PSNR for image 0: 32.52845554715153
+PSNR for image 1: 32.23616193584941
+PSNR for image 2: 32.19674083816935
+Average PSNR for image set video (19)_3 : 32.320452773723424
+PSNR for imageSet video (19)_4
+
+PSNR for image 0: 32.93866892814945
+PSNR for image 1: 33.0393085231792
+PSNR for image 2: 32.88221551237272
+Average PSNR for image set video (19)_4 : 32.95339765456712
+PSNR for imageSet video (19)_5
+
+PSNR for image 0: 35.03183732187753
+PSNR for image 1: 34.78416751920103
+PSNR for image 2: 34.59918601506581
+Average PSNR for image set video (19)_5 : 34.80506361871479
+PSNR for imageSet video (19)_6
+
+PSNR for image 0: 34.419183262297516
+PSNR for image 1: 34.58628069907694
+PSNR for image 2: 35.2533381932667
+Average PSNR for image set video (19)_6 : 34.75293405154705
+PSNR for imageSet video (19)_7
+
+PSNR for image 0: 34.20147177923023
+PSNR for image 1: 33.68926132602366
+PSNR for image 2: 33.546224075436555
+Average PSNR for image set video (19)_7 : 33.81231906023015
+PSNR for imageSet video (19)_8
+
+PSNR for image 0: 33.805492082806985
+PSNR for image 1: 33.351991347911614
+PSNR for image 2: 32.89701269364413
+Average PSNR for image set video (19)_8 : 33.35149870812091
+PSNR for imageSet video (19)_9
+
+PSNR for image 0: 32.61613047192356
+PSNR for image 1: 32.6386403915873
+PSNR for image 2: 32.48798311958546
+Average PSNR for image set video (19)_9 : 32.58091799436544
+PSNR for imageSet video (2)_0
+
+PSNR for image 0: 35.64439920078048
+PSNR for image 1: 35.75888215101234
+PSNR for image 2: 35.01614314437945
+Average PSNR for image set video (2)_0 : 35.47314149872409
+PSNR for imageSet video (2)_1
+
+PSNR for image 0: 33.796387656770754
+PSNR for image 1: 33.11463102950606
+PSNR for image 2: 33.864001632978585
+Average PSNR for image set video (2)_1 : 33.591673439751794
+PSNR for imageSet video (2)_10
+
+PSNR for image 0: 33.92399396312888
+PSNR for image 1: 33.923757980936024
+PSNR for image 2: 33.9240096780638
+Average PSNR for image set video (2)_10 : 33.92392054070957
+PSNR for imageSet video (2)_11
+
+PSNR for image 0: 36.04638226806818
+PSNR for image 1: 36.10502022907287
+PSNR for image 2: 35.29108529978548
+Average PSNR for image set video (2)_11 : 35.81416259897551
+PSNR for imageSet video (2)_12
+
+PSNR for image 0: 34.152190612400176
+PSNR for image 1: 34.14698248703993
+PSNR for image 2: 34.1479374750525
+Average PSNR for image set video (2)_12 : 34.1490368581642
+PSNR for imageSet video (2)_13
+
+PSNR for image 0: 32.747991454438655
+PSNR for image 1: 33.412895335251335
+PSNR for image 2: 36.26572519015141
+Average PSNR for image set video (2)_13 : 34.14220399328047
+PSNR for imageSet video (2)_14
+
+PSNR for image 0: 33.59799598709627
+PSNR for image 1: 33.59799205361492
+PSNR for image 2: 33.59801961264363
+Average PSNR for image set video (2)_14 : 33.59800255111827
+PSNR for imageSet video (2)_2
+
+PSNR for image 0: 35.60148015198872
+PSNR for image 1: 35.59658131955247
+PSNR for image 2: 35.46291562947348
+Average PSNR for image set video (2)_2 : 35.55365903367156
+PSNR for imageSet video (2)_3
+
+PSNR for image 0: 33.71927370113038
+PSNR for image 1: 33.72571584416962
+PSNR for image 2: 33.72536522942133
+Average PSNR for image set video (2)_3 : 33.72345159157378
+PSNR for imageSet video (2)_4
+
+PSNR for image 0: 33.51254982948386
+PSNR for image 1: 33.51194564784849
+PSNR for image 2: 33.51163893719623
+Average PSNR for image set video (2)_4 : 33.512044804842866
+PSNR for imageSet video (2)_5
+
+PSNR for image 0: 33.65411718740966
+PSNR for image 1: 33.65350332183596
+PSNR for image 2: 33.65529984102917
+Average PSNR for image set video (2)_5 : 33.654306783424936
+PSNR for imageSet video (2)_6
+
+PSNR for image 0: 34.74040901458612
+PSNR for image 1: 34.65347557561906
+PSNR for image 2: 34.87370068955509
+Average PSNR for image set video (2)_6 : 34.75586175992009
+PSNR for imageSet video (2)_7
+
+PSNR for image 0: 35.784841702882744
+PSNR for image 1: 35.52590743417912
+PSNR for image 2: 35.252245649937294
+Average PSNR for image set video (2)_7 : 35.52099826233305
+PSNR for imageSet video (2)_8
+
+PSNR for image 0: 33.86394209300775
+PSNR for image 1: 33.86398108924409
+PSNR for image 2: 33.86343282176282
+Average PSNR for image set video (2)_8 : 33.863785334671554
+PSNR for imageSet video (2)_9
+
+PSNR for image 0: 35.569466751169976
+PSNR for image 1: 35.32922229699085
+PSNR for image 2: 34.44877714535776
+Average PSNR for image set video (2)_9 : 35.1158220645062
+PSNR for imageSet video (21)_0
+
+PSNR for image 0: 28.284697773020497
+PSNR for image 1: 28.27742384680994
+PSNR for image 2: 28.28335382297112
+Average PSNR for image set video (21)_0 : 28.281825147600518
+PSNR for imageSet video (21)_1
+
+PSNR for image 0: 30.816825011962568
+PSNR for image 1: 31.065679467166106
+PSNR for image 2: 30.809338854453596
+Average PSNR for image set video (21)_1 : 30.89728111119409
+PSNR for imageSet video (21)_10
+
+PSNR for image 0: 31.00143678064668
+PSNR for image 1: 30.998267695458704
+PSNR for image 2: 30.97151596307482
+Average PSNR for image set video (21)_10 : 30.990406813060066
+PSNR for imageSet video (21)_11
+
+PSNR for image 0: 31.60588801919007
+PSNR for image 1: 31.574566551446196
+PSNR for image 2: 31.576376282317568
+Average PSNR for image set video (21)_11 : 31.585610284317948
+PSNR for imageSet video (21)_12
+
+PSNR for image 0: 29.862081747391066
+PSNR for image 1: 29.794179012068977
+PSNR for image 2: 29.837514539131394
+Average PSNR for image set video (21)_12 : 29.83125843286381
+PSNR for imageSet video (21)_13
+
+PSNR for image 0: 30.272526249221713
+PSNR for image 1: 30.543327723943904
+PSNR for image 2: 30.66989527699054
+Average PSNR for image set video (21)_13 : 30.495249750052054
+PSNR for imageSet video (21)_14
+
+PSNR for image 0: 31.150430533359916
+PSNR for image 1: 31.316038001339102
+PSNR for image 2: 31.24841372887483
+Average PSNR for image set video (21)_14 : 31.238294087857952
+PSNR for imageSet video (21)_2
+
+PSNR for image 0: 30.577077174577184
+PSNR for image 1: 30.529755555711834
+PSNR for image 2: 30.70898742124442
+Average PSNR for image set video (21)_2 : 30.605273383844477
+PSNR for imageSet video (21)_3
+
+PSNR for image 0: 30.873604070202667
+PSNR for image 1: 30.964625367382133
+PSNR for image 2: 30.74720160700239
+Average PSNR for image set video (21)_3 : 30.86181034819573
+PSNR for imageSet video (21)_4
+
+PSNR for image 0: 30.702893033051403
+PSNR for image 1: 30.47616630057607
+PSNR for image 2: 30.564125883777656
+Average PSNR for image set video (21)_4 : 30.58106173913505
+PSNR for imageSet video (21)_5
+
+PSNR for image 0: 31.372782288330228
+PSNR for image 1: 31.369145913487095
+PSNR for image 2: 31.348642321439947
+Average PSNR for image set video (21)_5 : 31.363523507752422
+PSNR for imageSet video (21)_6
+
+PSNR for image 0: 30.370879266072834
+PSNR for image 1: 30.445885877001196
+PSNR for image 2: 30.230774869810745
+Average PSNR for image set video (21)_6 : 30.349180004294926
+PSNR for imageSet video (21)_7
+
+PSNR for image 0: 30.499327220037035
+PSNR for image 1: 30.576964965401004
+PSNR for image 2: 30.61512198606959
+Average PSNR for image set video (21)_7 : 30.563804723835876
+PSNR for imageSet video (21)_8
+
+PSNR for image 0: 31.29115819061098
+PSNR for image 1: 31.069424953576977
+PSNR for image 2: 30.87198057704182
+Average PSNR for image set video (21)_8 : 31.077521240409926
+PSNR for imageSet video (21)_9
+
+PSNR for image 0: 31.538155257594745
+PSNR for image 1: 31.725574484795615
+PSNR for image 2: 31.684194864399178
+Average PSNR for image set video (21)_9 : 31.64930820226318
+PSNR for imageSet video (22)_0
+
+PSNR for image 0: 30.11762342151974
+PSNR for image 1: 30.118587406687944
+PSNR for image 2: 30.119224521299756
+Average PSNR for image set video (22)_0 : 30.118478449835816
+PSNR for imageSet video (22)_1
+
+PSNR for image 0: 31.016589341005822
+PSNR for image 1: 31.017254849364356
+PSNR for image 2: 31.02136785957419
+Average PSNR for image set video (22)_1 : 31.018404016648123
+PSNR for imageSet video (22)_10
+
+PSNR for image 0: 32.74982707057634
+PSNR for image 1: 32.823690988359495
+PSNR for image 2: 32.725743949286915
+Average PSNR for image set video (22)_10 : 32.76642066940758
+PSNR for imageSet video (22)_11
+
+PSNR for image 0: 31.131385239623896
+PSNR for image 1: 31.032307217089436
+PSNR for image 2: 31.014922869567844
+Average PSNR for image set video (22)_11 : 31.059538442093725
+PSNR for imageSet video (22)_12
+
+PSNR for image 0: 30.768424764362937
+PSNR for image 1: 30.65704712522923
+PSNR for image 2: 30.648492873784036
+Average PSNR for image set video (22)_12 : 30.69132158779207
+PSNR for imageSet video (22)_13
+
+PSNR for image 0: 30.702115263453518
+PSNR for image 1: 30.75330321569647
+PSNR for image 2: 30.66481354005983
+Average PSNR for image set video (22)_13 : 30.70674400640327
+PSNR for imageSet video (22)_14
+
+PSNR for image 0: 30.55505959152512
+PSNR for image 1: 30.5606932276811
+PSNR for image 2: 30.473624749878255
+Average PSNR for image set video (22)_14 : 30.52979252302816
+PSNR for imageSet video (22)_2
+
+PSNR for image 0: 34.53539514295759
+PSNR for image 1: 34.475085238733335
+PSNR for image 2: 34.44301751674129
+Average PSNR for image set video (22)_2 : 34.484499299477406
+PSNR for imageSet video (22)_3
+
+PSNR for image 0: 35.00528423134732
+PSNR for image 1: 35.08654349378431
+PSNR for image 2: 35.003351188719314
+Average PSNR for image set video (22)_3 : 35.031726304616974
+PSNR for imageSet video (22)_4
+
+PSNR for image 0: 31.16743310985496
+PSNR for image 1: 31.179723715094802
+PSNR for image 2: 31.17885138564775
+Average PSNR for image set video (22)_4 : 31.17533607019917
+PSNR for imageSet video (22)_5
+
+PSNR for image 0: 26.533710246529267
+PSNR for image 1: 26.535543918213786
+PSNR for image 2: 26.613068907066157
+Average PSNR for image set video (22)_5 : 26.560774357269736
+PSNR for imageSet video (22)_6
+
+PSNR for image 0: 26.85978369631416
+PSNR for image 1: 26.858905580395536
+PSNR for image 2: 26.849474403252195
+Average PSNR for image set video (22)_6 : 26.856054559987296
+PSNR for imageSet video (22)_7
+
+PSNR for image 0: 33.61246639901799
+PSNR for image 1: 33.438336440803454
+PSNR for image 2: 33.52083892077593
+Average PSNR for image set video (22)_7 : 33.52388058686579
+PSNR for imageSet video (22)_8
+
+PSNR for image 0: 32.82282492807986
+PSNR for image 1: 32.98341022612715
+PSNR for image 2: 32.60969001486381
+Average PSNR for image set video (22)_8 : 32.805308389690275
+PSNR for imageSet video (22)_9
+
+PSNR for image 0: 32.573030726146655
+PSNR for image 1: 32.530266662609854
+PSNR for image 2: 32.48603815401068
+Average PSNR for image set video (22)_9 : 32.52977851425573
+PSNR for imageSet video (24)_0
+
+PSNR for image 0: 34.56308183139835
+PSNR for image 1: 34.54823812175548
+PSNR for image 2: 34.50365831072856
+Average PSNR for image set video (24)_0 : 34.5383260879608
+PSNR for imageSet video (24)_1
+
+PSNR for image 0: 34.83262392422523
+PSNR for image 1: 34.836429104585335
+PSNR for image 2: 34.91724663474976
+Average PSNR for image set video (24)_1 : 34.86209988785344
+PSNR for imageSet video (24)_10
+
+PSNR for image 0: 33.73468194122569
+PSNR for image 1: 33.90650632969588
+PSNR for image 2: 33.776500022109396
+Average PSNR for image set video (24)_10 : 33.805896097676985
+PSNR for imageSet video (24)_11
+
+PSNR for image 0: 33.94763257926388
+PSNR for image 1: 33.94660059534576
+PSNR for image 2: 34.08350235878802
+Average PSNR for image set video (24)_11 : 33.99257851113256
+PSNR for imageSet video (24)_12
+
+PSNR for image 0: 35.28993723383828
+PSNR for image 1: 35.2663507438571
+PSNR for image 2: 35.263707275210756
+Average PSNR for image set video (24)_12 : 35.27333175096871
+PSNR for imageSet video (24)_13
+
+PSNR for image 0: 33.75878025336227
+PSNR for image 1: 33.77646659363521
+PSNR for image 2: 33.70393114450971
+Average PSNR for image set video (24)_13 : 33.74639266383573
+PSNR for imageSet video (24)_14
+
+PSNR for image 0: 34.162387552868324
+PSNR for image 1: 34.12991740637835
+PSNR for image 2: 34.21114164440271
+Average PSNR for image set video (24)_14 : 34.167815534549796
+PSNR for imageSet video (24)_2
+
+PSNR for image 0: 31.54352667936866
+PSNR for image 1: 32.18072477458337
+PSNR for image 2: 31.893574511993123
+Average PSNR for image set video (24)_2 : 31.872608655315048
+PSNR for imageSet video (24)_3
+
+PSNR for image 0: 30.17450577264457
+PSNR for image 1: 30.11249847077511
+PSNR for image 2: 30.96559115570816
+Average PSNR for image set video (24)_3 : 30.41753179970928
+PSNR for imageSet video (24)_4
+
+PSNR for image 0: 33.22516978798745
+PSNR for image 1: 33.737706146359365
+PSNR for image 2: 33.354301436479815
+Average PSNR for image set video (24)_4 : 33.43905912360888
+PSNR for imageSet video (24)_5
+
+PSNR for image 0: 35.16605957915117
+PSNR for image 1: 35.19916974228956
+PSNR for image 2: 35.0417842577312
+Average PSNR for image set video (24)_5 : 35.135671193057306
+PSNR for imageSet video (24)_6
+
+PSNR for image 0: 34.442251701729525
+PSNR for image 1: 34.66451463178415
+PSNR for image 2: 34.69353968550231
+Average PSNR for image set video (24)_6 : 34.60010200633866
+PSNR for imageSet video (24)_7
+
+PSNR for image 0: 35.12847288515062
+PSNR for image 1: 34.73690931604911
+PSNR for image 2: 35.735476151215686
+Average PSNR for image set video (24)_7 : 35.20028611747181
+PSNR for imageSet video (24)_8
+
+PSNR for image 0: 33.57528437045821
+PSNR for image 1: 33.785282508467354
+PSNR for image 2: 33.58918036769196
+Average PSNR for image set video (24)_8 : 33.64991574887251
+PSNR for imageSet video (24)_9
+
+PSNR for image 0: 34.00080398700588
+PSNR for image 1: 34.14189289124588
+PSNR for image 2: 33.979407280098236
+Average PSNR for image set video (24)_9 : 34.040701386116666
+PSNR for imageSet video (25)_0
+
+PSNR for image 0: 33.899868699592076
+PSNR for image 1: 34.215941920921125
+PSNR for image 2: 33.95967648261994
+Average PSNR for image set video (25)_0 : 34.02516236771105
+PSNR for imageSet video (25)_1
+
+PSNR for image 0: 35.38581971176186
+PSNR for image 1: 35.21093642148395
+PSNR for image 2: 34.68512752241442
+Average PSNR for image set video (25)_1 : 35.09396121855341
+PSNR for imageSet video (25)_10
+
+PSNR for image 0: 36.15258526508564
+PSNR for image 1: 35.91712479004763
+PSNR for image 2: 36.00560696414467
+Average PSNR for image set video (25)_10 : 36.025105673092646
+PSNR for imageSet video (25)_11
+
+PSNR for image 0: 35.70492561930207
+PSNR for image 1: 35.58150479341379
+PSNR for image 2: 35.31712307604657
+Average PSNR for image set video (25)_11 : 35.53451782958748
+PSNR for imageSet video (25)_12
+
+PSNR for image 0: 37.125406567570224
+PSNR for image 1: 36.860735309686085
+PSNR for image 2: 37.00755252101669
+Average PSNR for image set video (25)_12 : 36.99789813275766
+PSNR for imageSet video (25)_13
+
+PSNR for image 0: 36.0713691002245
+PSNR for image 1: 35.40723942072641
+PSNR for image 2: 35.75332022655853
+Average PSNR for image set video (25)_13 : 35.74397624916981
+PSNR for imageSet video (25)_14
+
+PSNR for image 0: 35.28688056856899
+PSNR for image 1: 35.538151165810106
+PSNR for image 2: 35.44373592042768
+Average PSNR for image set video (25)_14 : 35.422922551602255
+PSNR for imageSet video (25)_2
+
+PSNR for image 0: 33.061840001859416
+PSNR for image 1: 32.76911476555097
+PSNR for image 2: 32.738278155893255
+Average PSNR for image set video (25)_2 : 32.856410974434546
+PSNR for imageSet video (25)_3
+
+PSNR for image 0: 34.20289314016516
+PSNR for image 1: 34.67346429708266
+PSNR for image 2: 34.44570334100463
+Average PSNR for image set video (25)_3 : 34.44068692608415
+PSNR for imageSet video (25)_4
+
+PSNR for image 0: 34.60920016021819
+PSNR for image 1: 34.990480397435206
+PSNR for image 2: 34.65443454402268
+Average PSNR for image set video (25)_4 : 34.751371700558686
+PSNR for imageSet video (25)_5
+
+PSNR for image 0: 33.052621748040806
+PSNR for image 1: 33.49546449334621
+PSNR for image 2: 33.55245543218704
+Average PSNR for image set video (25)_5 : 33.36684722452468
+PSNR for imageSet video (25)_6
+
+PSNR for image 0: 34.87752382702347
+PSNR for image 1: 34.6465816161006
+PSNR for image 2: 34.6786828366041
+Average PSNR for image set video (25)_6 : 34.734262759909384
+PSNR for imageSet video (25)_7
+
+PSNR for image 0: 32.38383619891311
+PSNR for image 1: 32.446579168759826
+PSNR for image 2: 32.90812593748366
+Average PSNR for image set video (25)_7 : 32.57951376838553
+PSNR for imageSet video (25)_8
+
+PSNR for image 0: 32.40180612132448
+PSNR for image 1: 32.65315585692845
+PSNR for image 2: 32.211999789445855
+Average PSNR for image set video (25)_8 : 32.42232058923293
+PSNR for imageSet video (25)_9
+
+PSNR for image 0: 36.407833223619534
+PSNR for image 1: 36.33375021475359
+PSNR for image 2: 36.551040448552044
+Average PSNR for image set video (25)_9 : 36.430874628975054
+PSNR for imageSet video (3)_0
+
+PSNR for image 0: 30.045995907600457
+PSNR for image 1: 29.755708198250122
+PSNR for image 2: 30.00094802883701
+Average PSNR for image set video (3)_0 : 29.934217378229192
+PSNR for imageSet video (3)_1
+
+PSNR for image 0: 29.963806722241515
+PSNR for image 1: 30.54778325087399
+PSNR for image 2: 30.144739952851474
+Average PSNR for image set video (3)_1 : 30.218776641988995
+PSNR for imageSet video (3)_10
+
+PSNR for image 0: 29.6069775101199
+PSNR for image 1: 29.606116571272487
+PSNR for image 2: 29.998978500286576
+Average PSNR for image set video (3)_10 : 29.737357527226322
+PSNR for imageSet video (3)_11
+
+PSNR for image 0: 29.21840179187347
+PSNR for image 1: 28.498448192635863
+PSNR for image 2: 28.710885223834023
+Average PSNR for image set video (3)_11 : 28.809245069447787
+PSNR for imageSet video (3)_12
+
+PSNR for image 0: 28.917756274415094
+PSNR for image 1: 28.61921633676866
+PSNR for image 2: 29.286311338278693
+Average PSNR for image set video (3)_12 : 28.941094649820815
+PSNR for imageSet video (3)_13
+
+PSNR for image 0: 30.353372864202527
+PSNR for image 1: 30.149755475504957
+PSNR for image 2: 30.104635481127744
+Average PSNR for image set video (3)_13 : 30.20258794027841
+PSNR for imageSet video (3)_14
+
+PSNR for image 0: 30.781308416541272
+PSNR for image 1: 31.086651916024483
+PSNR for image 2: 31.032747225352935
+Average PSNR for image set video (3)_14 : 30.96690251930623
+PSNR for imageSet video (3)_2
+
+PSNR for image 0: 32.878276704549364
+PSNR for image 1: 33.13491379202863
+PSNR for image 2: 33.32562373384011
+Average PSNR for image set video (3)_2 : 33.11293807680604
+PSNR for imageSet video (3)_3
+
+PSNR for image 0: 30.38321162501125
+PSNR for image 1: 29.876111655352105
+PSNR for image 2: 30.24921412348356
+Average PSNR for image set video (3)_3 : 30.169512467948973
+PSNR for imageSet video (3)_4
+
+PSNR for image 0: 32.625917805682455
+PSNR for image 1: 32.43913791623828
+PSNR for image 2: 32.70139407289217
+Average PSNR for image set video (3)_4 : 32.588816598270974
+PSNR for imageSet video (3)_5
+
+PSNR for image 0: 33.9563220992966
+PSNR for image 1: 34.05366670129098
+PSNR for image 2: 33.88380959391415
+Average PSNR for image set video (3)_5 : 33.96459946483391
+PSNR for imageSet video (3)_6
+
+PSNR for image 0: 32.15630974909298
+PSNR for image 1: 31.71887773605064
+PSNR for image 2: 31.837877606621802
+Average PSNR for image set video (3)_6 : 31.904355030588476
+PSNR for imageSet video (3)_7
+
+PSNR for image 0: 32.91243443084856
+PSNR for image 1: 33.403671297697315
+PSNR for image 2: 33.750952327127834
+Average PSNR for image set video (3)_7 : 33.355686018557904
+PSNR for imageSet video (3)_8
+
+PSNR for image 0: 30.30134121820325
+PSNR for image 1: 30.522685338876364
+PSNR for image 2: 30.677116995564276
+Average PSNR for image set video (3)_8 : 30.500381184214632
+PSNR for imageSet video (3)_9
+
+PSNR for image 0: 31.29939192078676
+PSNR for image 1: 30.784085578839544
+PSNR for image 2: 31.206857414191592
+Average PSNR for image set video (3)_9 : 31.096778304605966
+PSNR for imageSet video (4)_0
+
+PSNR for image 0: 30.92408475777676
+PSNR for image 1: 30.896172654608787
+PSNR for image 2: 30.87870597420455
+Average PSNR for image set video (4)_0 : 30.899654462196697
+PSNR for imageSet video (4)_1
+
+PSNR for image 0: 30.80182364905602
+PSNR for image 1: 30.803983484678035
+PSNR for image 2: 30.8028001785648
+Average PSNR for image set video (4)_1 : 30.802869104099617
+PSNR for imageSet video (4)_10
+
+PSNR for image 0: 36.23709179321312
+PSNR for image 1: 36.25780083816273
+PSNR for image 2: 36.35091979710995
+Average PSNR for image set video (4)_10 : 36.281937476161936
+PSNR for imageSet video (4)_11
+
+PSNR for image 0: 34.52983267271077
+PSNR for image 1: 34.66336601602891
+PSNR for image 2: 34.539354630226455
+Average PSNR for image set video (4)_11 : 34.577517772988706
+PSNR for imageSet video (4)_12
+
+PSNR for image 0: 29.134562117996012
+PSNR for image 1: 29.170530739061586
+PSNR for image 2: 29.22612437619978
+Average PSNR for image set video (4)_12 : 29.177072411085792
+PSNR for imageSet video (4)_13
+
+PSNR for image 0: 33.59602546414241
+PSNR for image 1: 33.59690967034255
+PSNR for image 2: 33.57332096981704
+Average PSNR for image set video (4)_13 : 33.58875203476733
+PSNR for imageSet video (4)_14
+
+PSNR for image 0: 28.259908290402507
+PSNR for image 1: 27.297197928279804
+PSNR for image 2: 27.74286480983659
+Average PSNR for image set video (4)_14 : 27.7666570095063
+PSNR for imageSet video (4)_2
+
+PSNR for image 0: 31.15641382128475
+PSNR for image 1: 31.12819203049807
+PSNR for image 2: 31.14379623259503
+Average PSNR for image set video (4)_2 : 31.142800694792616
+PSNR for imageSet video (4)_3
+
+PSNR for image 0: 31.149457787545565
+PSNR for image 1: 31.09045911015114
+PSNR for image 2: 31.107648376444672
+Average PSNR for image set video (4)_3 : 31.115855091380457
+PSNR for imageSet video (4)_4
+
+PSNR for image 0: 33.70806577233478
+PSNR for image 1: 33.891784611667056
+PSNR for image 2: 34.12427976032726
+Average PSNR for image set video (4)_4 : 33.90804338144303
+PSNR for imageSet video (4)_5
+
+PSNR for image 0: 34.051257228928826
+PSNR for image 1: 34.02935298639045
+PSNR for image 2: 33.96994889310315
+Average PSNR for image set video (4)_5 : 34.01685303614081
+PSNR for imageSet video (4)_6
+
+PSNR for image 0: 35.73053051700298
+PSNR for image 1: 35.82972800414125
+PSNR for image 2: 36.19091372659743
+Average PSNR for image set video (4)_6 : 35.91705741591389
+PSNR for imageSet video (4)_7
+
+PSNR for image 0: 34.223045338830474
+PSNR for image 1: 34.352844717803535
+PSNR for image 2: 34.03580932031832
+Average PSNR for image set video (4)_7 : 34.20389979231744
+PSNR for imageSet video (4)_8
+
+PSNR for image 0: 35.59924134077739
+PSNR for image 1: 36.20295066757522
+PSNR for image 2: 35.884008607593614
+Average PSNR for image set video (4)_8 : 35.89540020531541
+PSNR for imageSet video (4)_9
+
+PSNR for image 0: 34.29851692774557
+PSNR for image 1: 34.52052079818843
+PSNR for image 2: 34.507816424024135
+Average PSNR for image set video (4)_9 : 34.442284716652715
+PSNR for imageSet video (5)_0
+
+PSNR for image 0: 28.241761805068787
+PSNR for image 1: 28.235704821787934
+PSNR for image 2: 28.2420170301886
+Average PSNR for image set video (5)_0 : 28.239827885681773
+PSNR for imageSet video (5)_1
+
+PSNR for image 0: 31.40490830900751
+PSNR for image 1: 31.294488835022655
+PSNR for image 2: 31.497690941552257
+Average PSNR for image set video (5)_1 : 31.39902936186081
+PSNR for imageSet video (5)_10
+
+PSNR for image 0: 31.383641577993227
+PSNR for image 1: 31.38237906286537
+PSNR for image 2: 31.332417620555102
+Average PSNR for image set video (5)_10 : 31.366146087137903
+PSNR for imageSet video (5)_11
+
+PSNR for image 0: 31.01777711267249
+PSNR for image 1: 31.017313431901187
+PSNR for image 2: 31.017708453799674
+Average PSNR for image set video (5)_11 : 31.01759966612445
+PSNR for imageSet video (5)_12
+
+PSNR for image 0: 29.946530792858837
+PSNR for image 1: 29.940500268469865
+PSNR for image 2: 29.95245411883164
+Average PSNR for image set video (5)_12 : 29.946495060053447
+PSNR for imageSet video (5)_13
+
+PSNR for image 0: 29.689936168310076
+PSNR for image 1: 29.65688488323456
+PSNR for image 2: 29.67628080165752
+Average PSNR for image set video (5)_13 : 29.674367284400716
+PSNR for imageSet video (5)_14
+
+PSNR for image 0: 29.90280472658862
+PSNR for image 1: 29.896174917045464
+PSNR for image 2: 29.907652463907457
+Average PSNR for image set video (5)_14 : 29.902210702513845
+PSNR for imageSet video (5)_2
+
+PSNR for image 0: 31.874964343300014
+PSNR for image 1: 31.689408398481326
+PSNR for image 2: 31.84665454481875
+Average PSNR for image set video (5)_2 : 31.80367576220003
+PSNR for imageSet video (5)_3
+
+PSNR for image 0: 30.865726764426256
+PSNR for image 1: 30.924910729514554
+PSNR for image 2: 30.489860499045033
+Average PSNR for image set video (5)_3 : 30.760165997661947
+PSNR for imageSet video (5)_4
+
+PSNR for image 0: 33.87759335478486
+PSNR for image 1: 33.80347383976316
+PSNR for image 2: 33.816929513345066
+Average PSNR for image set video (5)_4 : 33.83266556929769
+PSNR for imageSet video (5)_5
+
+PSNR for image 0: 38.8680820470279
+PSNR for image 1: 38.86808452894514
+PSNR for image 2: 38.868088169092985
+Average PSNR for image set video (5)_5 : 38.86808491502201
+PSNR for imageSet video (5)_6
+
+PSNR for image 0: 34.63214111567267
+PSNR for image 1: 34.639596495390144
+PSNR for image 2: 34.68615616931349
+Average PSNR for image set video (5)_6 : 34.65263126012543
+PSNR for imageSet video (5)_7
+
+PSNR for image 0: 30.75710166599314
+PSNR for image 1: 30.75677358781637
+PSNR for image 2: 30.756366444928368
+Average PSNR for image set video (5)_7 : 30.756747232912627
+PSNR for imageSet video (5)_8
+
+PSNR for image 0: 31.308692237993363
+PSNR for image 1: 31.201023809077654
+PSNR for image 2: 31.25516439943585
+Average PSNR for image set video (5)_8 : 31.25496014883562
+PSNR for imageSet video (5)_9
+
+PSNR for image 0: 29.27332872497989
+PSNR for image 1: 29.260794480528233
+PSNR for image 2: 29.28460495822725
+Average PSNR for image set video (5)_9 : 29.272909387911792
+PSNR for imageSet video (6)_0
+
+PSNR for image 0: 28.840588134219068
+PSNR for image 1: 28.996755327398596
+PSNR for image 2: 28.928498986655384
+Average PSNR for image set video (6)_0 : 28.921947482757684
+PSNR for imageSet video (6)_1
+
+PSNR for image 0: 35.34495972510948
+PSNR for image 1: 35.98476553797675
+PSNR for image 2: 35.87940255548639
+Average PSNR for image set video (6)_1 : 35.73637593952421
+PSNR for imageSet video (6)_10
+
+PSNR for image 0: 31.40129766299673
+PSNR for image 1: 31.530571305156055
+PSNR for image 2: 31.382934204260835
+Average PSNR for image set video (6)_10 : 31.438267724137873
+PSNR for imageSet video (6)_11
+
+PSNR for image 0: 35.67278219116035
+PSNR for image 1: 34.95397325701198
+PSNR for image 2: 35.73445227690695
+Average PSNR for image set video (6)_11 : 35.45373590835976
+PSNR for imageSet video (6)_12
+
+PSNR for image 0: 37.97628038595994
+PSNR for image 1: 37.901894330273585
+PSNR for image 2: 35.209552234034014
+Average PSNR for image set video (6)_12 : 37.02924231675585
+PSNR for imageSet video (6)_13
+
+PSNR for image 0: 38.80828571071946
+PSNR for image 1: 38.23951502456155
+PSNR for image 2: 38.14102232353146
+Average PSNR for image set video (6)_13 : 38.39627435293749
+PSNR for imageSet video (6)_14
+
+PSNR for image 0: 37.27975249072012
+PSNR for image 1: 37.74751685741133
+PSNR for image 2: 37.0729062418666
+Average PSNR for image set video (6)_14 : 37.36672519666602
+PSNR for imageSet video (6)_2
+
+PSNR for image 0: 34.234382427670376
+PSNR for image 1: 34.31947007169194
+PSNR for image 2: 33.88855723022467
+Average PSNR for image set video (6)_2 : 34.14746990986233
+PSNR for imageSet video (6)_3
+
+PSNR for image 0: 35.508729038971964
+PSNR for image 1: 35.16703771639216
+PSNR for image 2: 35.1646871505495
+Average PSNR for image set video (6)_3 : 35.28015130197121
+PSNR for imageSet video (6)_4
+
+PSNR for image 0: 34.282843262089756
+PSNR for image 1: 35.08085780140702
+PSNR for image 2: 34.590413327927855
+Average PSNR for image set video (6)_4 : 34.65137146380821
+PSNR for imageSet video (6)_5
+
+PSNR for image 0: 36.29820153814278
+PSNR for image 1: 35.93700665777649
+PSNR for image 2: 36.117633184507724
+Average PSNR for image set video (6)_5 : 36.11761379347566
+PSNR for imageSet video (6)_6
+
+PSNR for image 0: 34.17056420722006
+PSNR for image 1: 34.17577371883218
+PSNR for image 2: 34.008074613072715
+Average PSNR for image set video (6)_6 : 34.11813751304165
+PSNR for imageSet video (6)_7
+
+PSNR for image 0: 35.04462744952087
+PSNR for image 1: 34.95500073444978
+PSNR for image 2: 35.43812601791983
+Average PSNR for image set video (6)_7 : 35.145918067296826
+PSNR for imageSet video (6)_8
+
+PSNR for image 0: 34.79796732973964
+PSNR for image 1: 35.430150645320445
+PSNR for image 2: 34.86068187017017
+Average PSNR for image set video (6)_8 : 35.02959994841009
+PSNR for imageSet video (6)_9
+
+PSNR for image 0: 38.90341749483626
+PSNR for image 1: 39.368880511507804
+PSNR for image 2: 39.3732935964571
+Average PSNR for image set video (6)_9 : 39.21519720093372
+PSNR for imageSet video (7)_0
+
+PSNR for image 0: 31.074244766563783
+PSNR for image 1: 30.942246947502646
+PSNR for image 2: 30.97692578121448
+Average PSNR for image set video (7)_0 : 30.997805831760303
+PSNR for imageSet video (7)_1
+
+PSNR for image 0: 31.18630584241069
+PSNR for image 1: 30.994164359184456
+PSNR for image 2: 31.183100404833
+Average PSNR for image set video (7)_1 : 31.121190202142714
+PSNR for imageSet video (7)_10
+
+PSNR for image 0: 32.4622143507723
+PSNR for image 1: 32.25370195004389
+PSNR for image 2: 32.73105241481241
+Average PSNR for image set video (7)_10 : 32.482322905209536
+PSNR for imageSet video (7)_11
+
+PSNR for image 0: 33.07544386312094
+PSNR for image 1: 33.03670365411466
+PSNR for image 2: 33.08093313680385
+Average PSNR for image set video (7)_11 : 33.06436021801315
+PSNR for imageSet video (7)_12
+
+PSNR for image 0: 32.945823831389205
+PSNR for image 1: 33.34535667976711
+PSNR for image 2: 32.82447671704833
+Average PSNR for image set video (7)_12 : 33.03855240940155
+PSNR for imageSet video (7)_13
+
+PSNR for image 0: 36.411641035742576
+PSNR for image 1: 36.05267277083965
+PSNR for image 2: 36.27755770095903
+Average PSNR for image set video (7)_13 : 36.24729050251375
+PSNR for imageSet video (7)_14
+
+PSNR for image 0: 39.1371663700638
+PSNR for image 1: 39.31837041658279
+PSNR for image 2: 38.858454369129774
+Average PSNR for image set video (7)_14 : 39.10466371859212
+PSNR for imageSet video (7)_2
+
+PSNR for image 0: 30.863001257981935
+PSNR for image 1: 30.951657779081327
+PSNR for image 2: 30.88630854240669
+Average PSNR for image set video (7)_2 : 30.900322526489987
+PSNR for imageSet video (7)_3
+
+PSNR for image 0: 36.340977314578076
+PSNR for image 1: 36.34075512274095
+PSNR for image 2: 36.34075701821208
+Average PSNR for image set video (7)_3 : 36.34082981851037
+PSNR for imageSet video (7)_4
+
+PSNR for image 0: 37.814630654846766
+PSNR for image 1: 37.40023460201866
+PSNR for image 2: 36.994692266506746
+Average PSNR for image set video (7)_4 : 37.403185841124056
+PSNR for imageSet video (7)_5
+
+PSNR for image 0: 31.69691295289114
+PSNR for image 1: 31.489163115872056
+PSNR for image 2: 31.669490454536025
+Average PSNR for image set video (7)_5 : 31.61852217443307
+PSNR for imageSet video (7)_6
+
+PSNR for image 0: 31.45467245302628
+PSNR for image 1: 31.4051046377347
+PSNR for image 2: 31.463580921057684
+Average PSNR for image set video (7)_6 : 31.44111933727289
+PSNR for imageSet video (7)_7
+
+PSNR for image 0: 31.270447487692785
+PSNR for image 1: 31.03091586910638
+PSNR for image 2: 31.261446843530507
+Average PSNR for image set video (7)_7 : 31.18760340010989
+PSNR for imageSet video (7)_8
+
+PSNR for image 0: 33.1475644302656
+PSNR for image 1: 33.33380228502734
+PSNR for image 2: 33.280516944614014
+Average PSNR for image set video (7)_8 : 33.25396121996898
+PSNR for imageSet video (7)_9
+
+PSNR for image 0: 30.948016204761238
+PSNR for image 1: 30.901604501060326
+PSNR for image 2: 30.997793110274955
+Average PSNR for image set video (7)_9 : 30.94913793869884
+PSNR for imageSet video (9)_0
+
+PSNR for image 0: 38.5467932903724
+PSNR for image 1: 38.28998902099966
+PSNR for image 2: 38.52968080630605
+Average PSNR for image set video (9)_0 : 38.4554877058927
+PSNR for imageSet video (9)_1
+
+PSNR for image 0: 35.34900724972812
+PSNR for image 1: 35.221715151177605
+PSNR for image 2: 35.427454641669364
+Average PSNR for image set video (9)_1 : 35.33272568085837
+PSNR for imageSet video (9)_10
+
+PSNR for image 0: 41.773300479150485
+PSNR for image 1: 41.578094709158
+PSNR for image 2: 41.792397975822944
+Average PSNR for image set video (9)_10 : 41.714597721377146
+PSNR for imageSet video (9)_11
+
+PSNR for image 0: 42.15958339263865
+PSNR for image 1: 41.72723247678916
+PSNR for image 2: 42.01156262338321
+Average PSNR for image set video (9)_11 : 41.96612616427034
+PSNR for imageSet video (9)_12
+
+PSNR for image 0: 43.60444637711531
+PSNR for image 1: 43.335988610000484
+PSNR for image 2: 43.59528454956053
+Average PSNR for image set video (9)_12 : 43.51190651222544
+PSNR for imageSet video (9)_13
+
+PSNR for image 0: 35.42035299808954
+PSNR for image 1: 35.10712376343886
+PSNR for image 2: 35.41811133618759
+Average PSNR for image set video (9)_13 : 35.315196032572
+PSNR for imageSet video (9)_14
+
+PSNR for image 0: 36.03683747694881
+PSNR for image 1: 35.984072057859834
+PSNR for image 2: 36.111508393497076
+Average PSNR for image set video (9)_14 : 36.044139309435245
+PSNR for imageSet video (9)_2
+
+PSNR for image 0: 41.63503962150245
+PSNR for image 1: 41.28453725656573
+PSNR for image 2: 41.53263835664218
+Average PSNR for image set video (9)_2 : 41.48407174490345
+PSNR for imageSet video (9)_3
+
+PSNR for image 0: 35.551733676393944
+PSNR for image 1: 35.52422699361817
+PSNR for image 2: 35.78010337974954
+Average PSNR for image set video (9)_3 : 35.618688016587214
+PSNR for imageSet video (9)_4
+
+PSNR for image 0: 37.44490694732565
+PSNR for image 1: 36.98821776386913
+PSNR for image 2: 37.718363590280205
+Average PSNR for image set video (9)_4 : 37.38382943382499
+PSNR for imageSet video (9)_5
+
+PSNR for image 0: 45.66438267040016
+PSNR for image 1: 45.73169008217464
+PSNR for image 2: 46.06865368572822
+Average PSNR for image set video (9)_5 : 45.82157547943434
+PSNR for imageSet video (9)_6
+
+PSNR for image 0: 43.67363945360189
+PSNR for image 1: 43.273422114606745
+PSNR for image 2: 43.08017788849003
+Average PSNR for image set video (9)_6 : 43.34241315223289
+PSNR for imageSet video (9)_7
+
+PSNR for image 0: 35.32694110995654
+PSNR for image 1: 35.257288720406216
+PSNR for image 2: 35.31444553839009
+Average PSNR for image set video (9)_7 : 35.29955845625095
+PSNR for imageSet video (9)_8
+
+PSNR for image 0: 42.63230088362793
+PSNR for image 1: 42.43979260352583
+PSNR for image 2: 42.33828736462942
+Average PSNR for image set video (9)_8 : 42.47012695059439
+PSNR for imageSet video (9)_9
+
+PSNR for image 0: 37.15199671602015
+PSNR for image 1: 37.66626697589912
+PSNR for image 2: 37.474007039852054
+Average PSNR for image set video (9)_9 : 37.43075691059044
+Average PSNR: 33.207670427605215
