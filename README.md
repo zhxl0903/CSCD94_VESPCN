@@ -9,7 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites:
 
-Python 3.6 with Tensorflow 1.6
+Python 3.6 with Tensorflow 1.6 or 1.7
 
 #### Required Python Packages:
 
@@ -29,7 +29,7 @@ Mode                Description                       Training Required
  5     Multi-Dir Model Evaluation for Mode 2                 No
  6     Multi-Dir Model Evaluation for Mode 1                 No
  
- Note: Mode 5 and Mode 6 requires the corresponding model from Mode 1 and Mode 2, respectively.
+ Note: Mode 5 and Mode 6 require the corresponding model from Mode 1 and Mode 2, respectively.
 ```
 
 
