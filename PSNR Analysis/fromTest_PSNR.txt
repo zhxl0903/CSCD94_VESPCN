@@ -1,0 +1,6 @@
+Mode 1 PSNR: 35.041276342634106
+Mode 2 PSNR: 35.08070016292811
+Number of samples in Mode 1 Test Data:  180
+Number of samples in Mode 2 Test Data:  180
+Number of samples in Mode 1 with higher PSNR than Mode 2:  61
+Number of samples in Mode 2 with higher PSNR than Mode 1:  119

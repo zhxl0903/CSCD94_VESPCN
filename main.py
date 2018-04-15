@@ -7,8 +7,8 @@ flags.DEFINE_integer("epoch", 1200, "Number of epoch")
 flags.DEFINE_integer("image_size", 32, "The size of image input")
 flags.DEFINE_integer("c_dim", 3, "The size of channel")
 flags.DEFINE_boolean("is_train", True, "if training")
-flags.DEFINE_integer("train_mode", 0, "0: Spatial Transformer 1: VESPSCN No MC\
-                     2: VESPCN 3: Bicubic (No Training Required) 4: SRCNN \
+flags.DEFINE_integer("train_mode", 0, "0: Spatial Transformer 1: 9-L Single-Frame ESPCN\
+                     2: 9L-E3-MC VESPCN 3: Bicubic (No Training Required) 4: SRCNN \
                      5: Multi-Dir mode for testing mode 2 6: Multi-Dir mode \
                      for testing mode 1")
 flags.DEFINE_integer("scale", 3,

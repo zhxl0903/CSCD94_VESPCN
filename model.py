@@ -50,8 +50,8 @@ class ESPCN(object):
                     image_size: size of image for training
                     is_train: True iff training
                     train_mode: 0 is spatial transformer only
-                                1 is single frame 9 Layer ESPCN
-                                2 is 9 Layer Early Fusion VESPCN with MC
+                                1 is single frame 9-Layer ESPCN
+                                2 is 9-Layer-Early-Fusion VESPCN with MC
                                 3 is Bicubic (No Training Required)
                                 4 is SRCNN
                                 5 is Multi-Dir-Output Mode 2
@@ -92,7 +92,7 @@ class ESPCN(object):
 
         if self.is_train:
             
-            # Prepares placeholder based on train_mode used
+            # Prepares placeholders based on train_mode used for model training
             if self.train_mode == 0:
                 
                 # Sets up placeholders for training spatial transformer 
@@ -176,15 +176,14 @@ class ESPCN(object):
                                               self.image_size * self.scale,
                                               self.c_dim], name='labels')
         else:
-            
-            # Computes shape of placeholder for image feed from sample image
-            # loaded
+
+            # Computes shape of placeholder using image loaded from sample image
             print('Train Mode:', self.train_mode)
             data = load_data(self.is_train, self.train_mode)
             input_ = imread(data[0][0])       
             self.h, self.w, c = input_.shape
             
-            # Prepares placeholders based on training_mode used
+            # Prepares placeholders for model evaluation based on traini_mode used
             if self.train_mode == 0:
                 
                 # Sets up placeholders for training spatial transformer
@@ -269,7 +268,7 @@ class ESPCN(object):
             print('Mode 1/4/6: Mean-Squared Loss Activated')
         elif self.train_mode == 2 or self.train_mode == 5:
             
-            # Defines loss function for training in unison
+            # Defines loss function for Spatial Transformer and VESPCN joint training
             self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) \
                       + 0.01*tf.reduce_mean(tf.square(self.imgPrev -
                                             self.images_prev_curr[:, :,
@@ -365,7 +364,7 @@ class ESPCN(object):
         
         # Fine flow 
         # Stacks images input, course flow estimation, 
-        # and course image estimation along dimension 3
+        # and course flow warped image along dimension 3
         t1_fine_in = tf.concat([frameSet, t1_course_warp,
                                 t1_course_out], 3)
         
@@ -415,7 +414,7 @@ class ESPCN(object):
         t1_combined_flow = t1_course_out + t1_fine_out
         
         # Fine Warping
-        # Concatnates target image and combined flow channels
+        # Concatenates target image and combined flow channels
         t1_fine_warp_in = tf.concat([targetImg, t1_combined_flow], 3)
         
         # Applies warping using 2D convolution layer to estimate image at time
@@ -428,8 +427,7 @@ class ESPCN(object):
                                         kernel_initializer=weight_init,
                                         bias_initializer=biasInitializer,
                                         name='t1_fine_warp', reuse=reuse)
-        
-        # Resizes using bilinear interpolation
+
         # Output shape: (batchSize, h, w, c_dim)
         return t1_fine_warp
 
@@ -458,7 +456,7 @@ class ESPCN(object):
         if self.train_mode == 2 or self.train_mode == 5:
 
             # Obtains outputs from motion compensated previous and next
-            # images which are stacked with the target image(to be super-resolved).
+            # images which are stacked with the target image for Early Fusion
             imgPrev = self.spatial_transformer(self.images_prev_curr,
                                                reuse=False)
             imgNext = self.spatial_transformer(self.images_next_curr,
@@ -492,7 +490,7 @@ class ESPCN(object):
 
         elif self.train_mode == 1 or self.train_mode == 6:
 
-            # Connects subpixel convnet to placeholder for feeding single images
+            # Connects subpixel convnet to placeholder for feeding single frames
             subPixelIn = tf.layers.conv2d(imgSet,  24, 3, padding='same',
                                           activation=tf.nn.relu,
                                           kernel_initializer=wInitializer1,
@@ -516,10 +514,7 @@ class ESPCN(object):
                                              width*self.scale],
                                              method=tf.image.ResizeMethod.BICUBIC)
 
-        # TO DO: Enable all layers in every step but
-        # adjust inputs and outputs to layers depending on
-        # mode so the entire model is accessible through checkpoint
-        # Builds subpixel net if train mode is 1 or 2
+        # Builds Subpixel Network if train mode is 1 or 2
         if self.train_mode == 1 or self.train_mode == 2 or self.train_mode == 5 \
            or self.train_mode == 6:
 

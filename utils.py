@@ -165,7 +165,7 @@ def prepare_data(train_mode, dataset="Train"):
                     data.sort(key=lambda f: int(''.join(filter(str.isdigit,
                                                         os.path.basename(f)))))
                     dataPaths.append(data)
-    else
+    else:
 
         if train_mode == 0:
             data_dir = os.path.join(os.path.join(os.getcwd(), dataset),
@@ -307,7 +307,7 @@ def make_sub_data(data, config):
     
     dataPaths = []
 
-    # Returns test data if we are not training
+    # Returns test data if is_train=False
     if not config.is_train:
         for lsts in data:
             
@@ -360,7 +360,8 @@ def make_sub_data(data, config):
             if config.train_mode == 5 or config.train_mode == 6:
                 sub_input_sequence.append(dataSet)
         return sub_input_sequence, sub_label_sequence, dataPaths
-        
+
+    # Prepares training data if is_train
     for lsts in data:
         
         # Sets default upper bound for image processing loop for list lsts
@@ -462,11 +463,11 @@ def make_sub_data(data, config):
                         del sub_input_prev
                         del sub_curr_prev_next
                     
-                    # Add to sequence
+                    # Adds to sequence
                     sub_input_sequence.append(sub_input_data)
                     del sub_input_data
     
-            # Label (the time of scale)
+            # Prepares labels based on train_mode
             if config.train_mode != 0:
                 for x in range(0,
                                h * config.scale -
@@ -492,7 +493,7 @@ def make_sub_data(data, config):
                         # Normalizes sub_label
                         sub_label = sub_label / 255.0
                         
-                        # Add to sequence
+                        # Adds to sequence
                         sub_label_sequence.append(sub_label)
                         del sub_label
             else:
