@@ -35,6 +35,7 @@ Mode                Description                       Training Required
 #### Data
 
 Put train data sequences inside different folders in Train. Test data goes inside the corresponding Mode folder in Test. 
+Sample training data and testing data have been provided for each mode. 
 
 Note: Mode 5 and Mode 6 Test supports multiple folders for different sequences in Mode folder.
 
@@ -51,12 +52,15 @@ python main.py - h
 
 #### How to Test
 
-Put test images inside the corresponding Mode folder in Test folder.
+Put test images inside the desired Mode folder in Test folder.
 Then run the following command:
 ```
 python main.py --is_train=False --train_mode=#
 ```
 
+## Result
+
+A complete collection of the results for Mode 1 and Mode 2 SR is available in this [Google Drive](https://drive.google.com/drive/folders/1sL2Gdc12WQ-lv6pTagdKXpLFlszSkA-Z?usp=sharing). 
 
 
 
