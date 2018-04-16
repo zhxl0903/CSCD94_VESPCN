@@ -32,6 +32,36 @@ Mode                Description                       Training Required
  Note: Mode 5 and Mode 6 require the corresponding model from Mode 1 and Mode 2, respectively.
 ```
 
+#### Data
+
+Put train data sequences inside different folders in Train. Test data goes inside the corresponding Mode folder in Test. 
+Note: Mode 5 and Mode 6 supports multiple folders for different sequences in Mode folder.
+
+#### How to Train
+
+```
+python main.py --is_train=True --train_mode = #
+```
+
+If you want to see all the flags:
+```
+python main.py - h
+```
+
+#### How to Test
+
+Put test images inside the corresponding Mode folder in Test folder.
+Then run the following command:
+```
+python main.py --is_train=False --train_mode=#
+```
+
+
+
+
+
+
+
 
 
 
