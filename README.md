@@ -35,7 +35,8 @@ Mode                Description                       Training Required
 #### Data
 
 Put train data sequences inside different folders in Train. Test data goes inside the corresponding Mode folder in Test. 
-Note: Mode 5 and Mode 6 supports multiple folders for different sequences in Mode folder.
+
+Note: Mode 5 and Mode 6 Test supports multiple folders for different sequences in Mode folder.
 
 #### How to Train
 
