@@ -468,18 +468,17 @@ class ESPCN(object):
             motionCompensatedImgOut = self.spatial_transformer(self.images_curr_prev, reuse=False)
         else:
             imgSet = self.images_in
-       
+
+
         wInitializer1 = tf.orthogonal_initializer(np.sqrt(2))
-        wInitializer2 = tf.orthogonal_initializer(np.sqrt(2))
-        wInitializer3 = tf.orthogonal_initializer(np.sqrt(2))
        
         biasInitializer = tf.zeros_initializer()
 
         if self.train_mode == 2 or self.train_mode == 5:
 
-            # Connects early fusion network with spatial transformer
-            # and subpixel convnet. For collapsing to temporal depth of 1,
-            # number of channels produced is 24 by VESPCN paper
+            # Connects early fusion layer of 9-L ESPCN with stacked tensor of outputs from Spatial Transformer Networks
+            # and target frame
+            # For collapsing to temporal depth of 1, number of channels produced is 24 by VESPCN paper
             EarlyFusion = tf.layers.conv2d(imgSet,  24, 3, padding='same',
                                            activation=tf.nn.relu,
                                            kernel_initializer=wInitializer1,
@@ -514,7 +513,7 @@ class ESPCN(object):
                                              width*self.scale],
                                              method=tf.image.ResizeMethod.BICUBIC)
 
-        # Builds Subpixel Network if train mode is 1 or 2
+        # Builds Subpixel Network if train mode is 1 or 2 or 5 or 6
         if self.train_mode == 1 or self.train_mode == 2 or self.train_mode == 5 \
            or self.train_mode == 6:
 
@@ -540,24 +539,24 @@ class ESPCN(object):
                                      name='subPixelL4')
             conv5 = tf.layers.conv2d(conv4,  24, 3, padding='same',
                                      activation=tf.nn.relu,
-                                     kernel_initializer=wInitializer2,
+                                     kernel_initializer=wInitializer1,
                                      bias_initializer=biasInitializer,
                                      name='subPixelL5')
             conv6 = tf.layers.conv2d(conv5,  24, 3, padding='same',
                                      activation=tf.nn.relu,
-                                     kernel_initializer=wInitializer2,
+                                     kernel_initializer=wInitializer1,
                                      bias_initializer=biasInitializer,
                                      name='subPixelL6')
             conv7 = tf.layers.conv2d(conv6,  24, 3, padding='same',
                                      activation=tf.nn.relu,
-                                     kernel_initializer=wInitializer2,
+                                     kernel_initializer=wInitializer1,
                                      bias_initializer=biasInitializer,
                                      name='subPixelL7')
 
             conv8 = tf.layers.conv2d(conv7,
                                      self.c_dim * self.scale * self.scale,
                                      3, padding='same', activation=None,
-                                     kernel_initializer=wInitializer3,
+                                     kernel_initializer=wInitializer1,
                                      bias_initializer=biasInitializer,
                                      name='subPixelL8')
 
@@ -1106,7 +1105,8 @@ class ESPCN(object):
                 # to result_dir
                 
                 count = 0
-                
+
+                # Generates results for each sequence in different folders
                 for i in range(len(input_)):
                     
                     print('Working on dataset ' + str(i) + ' ...')
@@ -1143,6 +1143,8 @@ class ESPCN(object):
             elif self.train_mode == 6:        
                 
                 count = 0
+
+                # Generates results for each sequence in different folders
                 for i in range(len(input_)):
                     
                     print('Working on dataset ' + str(i) + ' ...')

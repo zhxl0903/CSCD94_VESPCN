@@ -25,6 +25,8 @@ flags.DEFINE_boolean("load_existing_data", False,
 
 
 def main(_):
+
+    # Sets up config and enables GPU memory allocation growth
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     
@@ -38,7 +40,8 @@ def main(_):
     elif FLAGS.train_mode == 6 and FLAGS.is_train:
         print('Error: Multi-Dir testing mode for Mode 1 does not require training')
         return
-    
+
+    # Starts session; initializes ESPCN object; and runs training or testing operations
     with tf.Session(config=config) as sess:
         espcn = ESPCN(sess,
                       image_size=FLAGS.image_size,
@@ -55,5 +58,5 @@ def main(_):
 
 if __name__ == '__main__':
     
-    # Parses command-line argument then calls the main function
+    # Parses command-line argument; then calls the main function
     tf.app.run() 
