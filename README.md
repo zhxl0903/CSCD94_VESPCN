@@ -1,6 +1,6 @@
 # CSCD94 Video Super Resolution Project
 
-This project contains a collection of video super resolution methods including a 9L-EF-MC VESPCN Network
+This project contains a collection of video super resolution methods including a 9L-E3-MC VESPCN Network
 and a 9L Single Frame ESPCN Network along with Bicubic and SRCNN.
 
 ## Getting Started
