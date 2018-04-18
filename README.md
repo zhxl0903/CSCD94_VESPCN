@@ -45,17 +45,19 @@ Note: Mode 5 and Mode 6 Test supports multiple folders for different sequences i
 python main.py --is_train=True --train_mode = #
 ```
 
-If you want to see all the flags:
-```
-python main.py - h
-```
-
 #### How to Test
 
 Put test images inside the desired Mode folder in Test folder.
 Then run the following command:
 ```
 python main.py --is_train=False --train_mode=#
+```
+
+#### Flags
+
+If you want to see all the flags:
+```
+python main.py - h
 ```
 
 ## Tools
