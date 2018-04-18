@@ -41,6 +41,7 @@ Note: Mode 5 and Mode 6 Test supports multiple folders for different sequences i
 
 #### How to Train
 
+Run the command below to start training with default flags:
 ```
 python main.py --is_train=True --train_mode = #
 ```
