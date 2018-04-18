@@ -20,6 +20,7 @@ l = []
 f = open('Mode1_fromTrain.txt', 'r')
 l = f.readlines()
 
+# Computes PSNRs for Mode 1 data
 p = []
 psnr1 = []
 for i in range(len(l)):
@@ -34,20 +35,6 @@ plt.figure(figsize=(25,25))
 
 plt.plot(p, label='Mode 1',  linewidth=3)
 
-'''l=[]
-f = open('Mode1_fromTrain.txt' ,'r')
-l = f.readlines()
-
-p = []
-for i in range(len(l)):
-    if('PSNR for image ' in l[i]):
-        s = (l[i].strip('\n')).split()
-        p.append(float(s[-1]))
-f.close()
-
-
-plt.plot(p)'''
-
 l = []
 f = open('Mode2_fromTrain.txt', 'r')
 l = f.readlines()
@@ -55,6 +42,7 @@ l = f.readlines()
 p = []
 psnr2 = []
 
+# Computes PSNRs for mode 2 data
 for i in range(len(l)):
     if('PSNR for image ' in l[i]) and ('Average PSNR for image ' not in l[i]):
         s = (l[i].strip('\n')).split()
@@ -80,20 +68,7 @@ plt.xlabel('Image')
 plt.title('PSNR on Train Data x3 SR')
 plt.grid()
 
+# Saves PSNR graph 
 plt.savefig('train_PSNR.png')
-
-'''l = []
-f = open('Mode2_fromTrain.txt' ,'r')
-l = f.readlines()
-
-p = []
-for i in range(len(l)):
-    if('PSNR for image ' in l[i]):
-        s = (l[i].strip('\n')).split()
-        p.append(float(s[-1]))
-f.close()
-
-
-plt.plot(p)'''
 
 plt.show()

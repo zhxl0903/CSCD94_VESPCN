@@ -58,6 +58,29 @@ Then run the following command:
 python main.py --is_train=False --train_mode=#
 ```
 
+## Tools
+
+The scripts and tools we used for this project are available in Tools.
+
+The table below shows gives a description of each tool/script.
+
+```
+Name                                                             Description
+PSNR_MultiDir_Calc.py                    Generates PSNR and RGB difference maps for sequences in multiple directories.                       
+tubeDownloader.py                        Downloads Youtube videos given URLs in a text file
+VideoFrameExtractorPowerTool.py          Extracts sequences from videos
+colorBarResultsGenerator.py              Generates grayscale difference maps with colorbars for frames in different sequences.
+BulkImageConverter.exe                   Image type conversion tool
+```
+
+In addition, Video List folder contains URLs Youtube videos we used to prepare test and training data. 
+
+## PSNR Analysis
+
+PSNR Analysis directory contains scripts and tools used in this project for PSNR analysis.
+
+extractPSNR_test.py and extractPSNR_train.py are used to generate statistics including average PSNR etc. along with mode 1 and mode 2 comparison graphs. 
+
 ## Result
 
 A complete collection of the results for Mode 1 and Mode 2 SR is available in this [Google Drive](https://drive.google.com/drive/folders/1sL2Gdc12WQ-lv6pTagdKXpLFlszSkA-Z?usp=sharing). 

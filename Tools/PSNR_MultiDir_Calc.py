@@ -38,6 +38,9 @@ f = open(os.path.join(psnrPath, 'psnr.txt'), 'w')
 
 psnrList = []
 
+# Calculates PSNR for each SR frame in different sequences
+# and saves its RGB difference map in a folder with the
+# the corresponding sequence name
 for root, dirs, files in os.walk(inputDir):
     if dirs != []:
         for folder in dirs:
@@ -45,7 +48,7 @@ for root, dirs, files in os.walk(inputDir):
             # Gets testing results
             dataFolderDir = os.path.join(inputDir, folder)        
                     
-            # make set of all dataset file path
+            # Makes set of all dataset file path
             data = glob.glob(os.path.join(dataFolderDir, "*.png"))
                     
             # Sorts by number in file name
@@ -58,7 +61,8 @@ for root, dirs, files in os.walk(inputDir):
             
             label.sort(key=lambda f: int(''.join(filter(str.isdigit,
                                                        os.path.basename(f)))))
-            
+													   
+            # Creates folder for sequence to save its RGB difference maps
             folderPath = os.path.join(resultDir, folder)
             os.makedirs(folderPath)
             
@@ -66,6 +70,7 @@ for root, dirs, files in os.walk(inputDir):
             f.write('PSNR for imageSet ' + folder + '\n')
             f.write('\n')
             
+			# Computes PSNR and saves difference map for each frame in sequence 
             psnrSub = []
             for i in range(len(data)):
                 hr = cv2.imread(label[i])

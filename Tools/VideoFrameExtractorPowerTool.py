@@ -20,6 +20,7 @@ if __name__=='__main__':
     
     rand.seed()
     
+	# Directory containing 360p videos
     data_dir1 = os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Videos\\New',
                             '360p')
             
@@ -29,6 +30,7 @@ if __name__=='__main__':
     # Sorts by number in file name
     data1.sort(key=lambda f: os.path.basename(f))
     
+	# Directory containing the corresponding 1080p videos
     data_dir2 = os.path.join('C:\\Users\\HP_OWNER\\Desktop\\TensorFlow-ESPCN\\Videos\\New',
                             '1080p')
             
@@ -44,15 +46,10 @@ if __name__=='__main__':
         
         print('Working on video ', str(i))
         
-        # Generates random frame capture points for each interval\
-        
+        # Generates random frame capture points for each interval
         startList = []
         for l in range(15):
             startList.append(rand.randint(l*200, l*200 + 195))
-        #start1 = rand.randint(0,175)
-        #start2 = rand.randint(1000, 1975)
-        #start3 = rand.randint(2000, 2975)
-        #startList = [start1, start2, start3]
         
         cap = cv2.VideoCapture(data1[i])
         cap2 = cv2.VideoCapture(data2[i])
