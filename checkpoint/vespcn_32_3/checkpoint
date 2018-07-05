@@ -1,6 +1,0 @@
-model_checkpoint_path: "VESPCN.model-324000"
-all_model_checkpoint_paths: "VESPCN.model-322000"
-all_model_checkpoint_paths: "VESPCN.model-322500"
-all_model_checkpoint_paths: "VESPCN.model-323000"
-all_model_checkpoint_paths: "VESPCN.model-323500"
-all_model_checkpoint_paths: "VESPCN.model-324000"

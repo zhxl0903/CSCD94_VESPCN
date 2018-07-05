@@ -1,6 +1,0 @@
-model_checkpoint_path: "VESPCN_Subpixel_NO_MC.model-522000"
-all_model_checkpoint_paths: "VESPCN_Subpixel_NO_MC.model-520000"
-all_model_checkpoint_paths: "VESPCN_Subpixel_NO_MC.model-520500"
-all_model_checkpoint_paths: "VESPCN_Subpixel_NO_MC.model-521000"
-all_model_checkpoint_paths: "VESPCN_Subpixel_NO_MC.model-521500"
-all_model_checkpoint_paths: "VESPCN_Subpixel_NO_MC.model-522000"

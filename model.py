@@ -6,6 +6,7 @@ import os
 import glob
 import cv2
 import scipy as sp
+from stn import spatial_transformer_network as transformer
 
 from utils import (
     input_setup,
@@ -18,6 +19,14 @@ from utils import (
     preprocess,
     modcrop
 )
+
+from transformer import (
+    spatial_transformer_network,
+    get_pixel_value,
+    affine_grid_generator,
+    bilinear_sampler
+)
+
 from PSNR import psnr
 
 
@@ -347,20 +356,26 @@ class ESPCN(object):
         # Course Warping
         # Gets target image to be warped
         targetImg = frameSet[:, :, :, self.c_dim:self.c_dim*2]
-        
-        # Generates tensor of dimension [-1, h, w, 3+2]
+
+        t1_course_warp = spatial_transformer_network(targetImg, t1_course_out)
+
+        '''# Generates tensor of dimension [-1, h, w, 3+2]
         t1_course_warp_in = tf.concat([targetImg, t1_course_out], 3)
         
         # Applies warping using 3D convolution to estimate image at time
         # t=t
         # Kernel size 3 is used to apply flow to image based on neighbouring
         # flows of pixel
+        
         t1_course_warp = tf.layers.conv2d(t1_course_warp_in, 3, 3,
                                           padding='same',
                                           activation=tf.nn.tanh,
                                           kernel_initializer=weight_init,
                                           bias_initializer=biasInitializer,
                                           name='t1_course_warp', reuse=reuse)
+        '''
+
+
         
         # Fine flow 
         # Stacks images input, course flow estimation, 
@@ -413,7 +428,7 @@ class ESPCN(object):
         # Output shape(-1, l, w, 2)
         t1_combined_flow = t1_course_out + t1_fine_out
         
-        # Fine Warping
+        '''# Fine Warping
         # Concatenates target image and combined flow channels
         t1_fine_warp_in = tf.concat([targetImg, t1_combined_flow], 3)
         
@@ -426,10 +441,11 @@ class ESPCN(object):
                                         activation=tf.nn.tanh, 
                                         kernel_initializer=weight_init,
                                         bias_initializer=biasInitializer,
-                                        name='t1_fine_warp', reuse=reuse)
+                                        name='t1_fine_warp', reuse=reuse)'''
+        t1_fine_warp = spatial_transformer_network(targetImg, t1_combined_flow)
 
         # Output shape: (batchSize, h, w, c_dim)
-        return t1_fine_warp
+        return tf.nn.tanh(t1_fine_warp)
 
     def model(self):
 
