@@ -505,7 +505,7 @@ def make_sub_data(data, config):
                         # Sets target image to label if train mode is 0
                         sub_label = input_[x: x + config.image_size,
                                            y: y + config.image_size]
-                        sub_label = sub_label.reshape([config.image_size ,
+                        sub_label = sub_label.reshape([config.image_size,
                                                        config.image_size,
                                                        config.c_dim])
                         

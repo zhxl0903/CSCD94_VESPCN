@@ -259,17 +259,19 @@ class ESPCN(object):
                                               self.w * self.scale,
                                               self.c_dim], name='labels')
         
-        if self.train_mode == 0 or self.train_mode == 1 or self.train_mode == 3 or self.train_mode == 4 or \
+        if self.train_mode == 1 or self.train_mode == 3 or self.train_mode == 4 or \
                 self.train_mode == 6:
             self.pred = self.model()
+        elif self.train_mode == 0:
+            self.pred, self.huber_loss = self.model()
         else:
-            self.pred, self.imgPrev, self.imgNext = self.model()
+            self.pred, self.imgPrev, self.imgNext, self.huber_loss_prev, self.huber_loss_next = self.model()
         
         # Prepares loss function based on training mode
         if self.train_mode == 0:
             
             # Defines loss function for training a single spatial transformer
-            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred))
+            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) + 0.01*self.huber_loss
         elif self.train_mode == 1 or self.train_mode == 4 or self.train_mode == 6:
             
             # Defines loss function for training subpixel convnet
@@ -285,7 +287,8 @@ class ESPCN(object):
                                                                   0:self.c_dim])) \
                       + 0.01*tf.reduce_mean(tf.square(self.imgNext -
                                             self.images_prev_curr[:, :, :,
-                                                                  0:self.c_dim]))
+                                                                  0:self.c_dim])) \
+                      + 0.001*(self.huber_loss_next + self.huber_loss_prev)
             
         if self.train_mode != 3:
 
@@ -420,13 +423,21 @@ class ESPCN(object):
         
         # Output shape(-1, l, w, 2)
         t1_fine_out = self.PS2(t1_fine_l5, 2, 2)
-        
+
         if not reuse:
             self.layerOutputs['fineFlow'] = t1_fine_out
         
         # Combines fine flow and course flow estimates
         # Output shape(-1, l, w, 2)
         t1_combined_flow = t1_course_out + t1_fine_out
+
+        # Computes flowmap gradients via convolution with sobel filters
+        # Output shape: [batch_size, h, w, 2, 2]
+        flowmap_grads = tf.image.sobel_edges(t1_combined_flow)
+
+        # Computes huber_loss
+        huber_loss = tf.sqrt(0.01 + tf.reduce_sum((tf.reduce_sum(tf.square(flowmap_grads), axis=(3, 4)))))
+
         
         '''# Fine Warping
         # Concatenates target image and combined flow channels
@@ -445,7 +456,7 @@ class ESPCN(object):
         t1_fine_warp = spatial_transformer_network(targetImg, t1_combined_flow)
 
         # Output shape: (batchSize, h, w, c_dim)
-        return tf.nn.tanh(t1_fine_warp)
+        return tf.nn.tanh(t1_fine_warp), huber_loss
 
     def model(self):
 
@@ -473,15 +484,15 @@ class ESPCN(object):
 
             # Obtains outputs from motion compensated previous and next
             # images which are stacked with the target image for Early Fusion
-            imgPrev = self.spatial_transformer(self.images_prev_curr,
-                                               reuse=False)
-            imgNext = self.spatial_transformer(self.images_next_curr,
-                                               reuse=True)
+            imgPrev, huber_loss_prev = self.spatial_transformer(self.images_prev_curr,
+                                                                reuse=False)
+            imgNext, huber_loss_next = self.spatial_transformer(self.images_next_curr,
+                                                                reuse=True)
                
             targetImg = self.images_prev_curr[:, :, :, 0:self.c_dim]
             imgSet = tf.concat([imgPrev, targetImg, imgNext], 3)
         elif self.train_mode == 0:
-            motionCompensatedImgOut = self.spatial_transformer(self.images_curr_prev, reuse=False)
+            motionCompensatedImgOut, huber_loss = self.spatial_transformer(self.images_curr_prev, reuse=False)
         else:
             imgSet = self.images_in
 
@@ -598,7 +609,7 @@ class ESPCN(object):
 
         # Returns network output given self.train_mode
         if self.train_mode == 0:
-            return motionCompensatedImgOut
+            return motionCompensatedImgOut, huber_loss
         elif self.train_mode == 1 or self.train_mode == 6:
             return tf.nn.tanh(ps)
         elif self.train_mode == 3:
@@ -606,7 +617,7 @@ class ESPCN(object):
         elif self.train_mode == 4:
             return conv3
         else:
-            return tf.nn.tanh(ps), imgPrev, imgNext
+            return tf.nn.tanh(ps), imgPrev, imgNext, huber_loss_prev, huber_loss_next
 
     @staticmethod
     def _phase_shift(I, r):
@@ -804,7 +815,16 @@ class ESPCN(object):
                     input_new.append(sp.misc.imresize(input_[i], (self.image_size*self.scale,
                                                                   self.image_size*self.scale), interp='bicubic'))
                 input_ = np.array(input_new)
-                
+            print('train_mode: ' + str(self.train_mode))
+
+            '''if self.train_mode == 0:
+                for i in range(20):
+
+                    print('Saving images for set ' + str(i))
+                    imsave(input_[i, :, :, 0:3], config.result_dir + '/curr' + str(i) + '.png', config)
+                    imsave(input_[i, :, :, 3:6], config.result_dir + '/prev' + str(i) + '.png', config)
+                    imsave(label_[i], config.result_dir + '/label' + str(i) + '.png', config)'''
+
             print("Now Start Training...")
             for ep in range(config.epoch):
                 
