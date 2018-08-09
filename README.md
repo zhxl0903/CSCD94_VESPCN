@@ -9,7 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites:
 
-Python 3.6 with Tensorflow 1.6 or 1.7
+Python 3.6 with Tensorflow 1.8 or 1.9
 
 #### Required Python Packages:
 
