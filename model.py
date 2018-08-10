@@ -6,7 +6,6 @@ import os
 import glob
 import cv2
 import scipy as sp
-from stn import spatial_transformer_network as transformer
 
 from utils import (
     input_setup,
@@ -351,7 +350,8 @@ class ESPCN(object):
         
         # Defines Course Flow Output
         # Output shape: (-1, l, w, 2)
-        t1_course_out = self.PS2(t1_course_l5, 4, 2)
+        #t1_course_out = self.PS2(t1_course_l5, 4, 2)
+        t1_course_out = tf.depth_to_space(t1_course_l5, 4)
         
         if not reuse:
             self.layerOutputs['courseFlow'] = t1_course_out
@@ -422,7 +422,8 @@ class ESPCN(object):
                                       name='t1_fine_l5', reuse=reuse)
         
         # Output shape(-1, l, w, 2)
-        t1_fine_out = self.PS2(t1_fine_l5, 2, 2)
+        #t1_fine_out = self.PS2(t1_fine_l5, 2, 2)
+        t1_fine_out = tf.depth_to_space(t1_fine_l5, 2)
 
         if not reuse:
             self.layerOutputs['fineFlow'] = t1_fine_out
@@ -587,7 +588,8 @@ class ESPCN(object):
                                      bias_initializer=biasInitializer,
                                      name='subPixelL8')
 
-            ps = self.PS(conv8, self.scale)
+            # ps = self.PS(conv8, self.scale)
+            ps = tf.depth_to_space(conv8, self.scale)
         elif self.train_mode == 4:
 
             # Builds SRCNN network if train_mode is 4
