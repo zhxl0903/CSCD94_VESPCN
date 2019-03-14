@@ -16,15 +16,10 @@ from utils import (
     imread,
     load_data,
     preprocess,
-    modcrop
-)
-
-from transformer import (
-    spatial_transformer_network,
-    get_pixel_value,
-    affine_grid_generator,
+    modcrop,
     bilinear_sampler
 )
+
 
 from PSNR import psnr
 
@@ -270,7 +265,7 @@ class ESPCN(object):
         if self.train_mode == 0:
             
             # Defines loss function for training a single spatial transformer
-            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) + 0.01*self.huber_loss
+            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) + 1e-6*self.huber_loss
         elif self.train_mode == 1 or self.train_mode == 4 or self.train_mode == 6:
             
             # Defines loss function for training subpixel convnet
@@ -360,7 +355,7 @@ class ESPCN(object):
         # Gets target image to be warped
         targetImg = frameSet[:, :, :, self.c_dim:self.c_dim*2]
 
-        t1_course_warp = spatial_transformer_network(targetImg, t1_course_out)
+        t1_course_warp = bilinear_sampler(targetImg, t1_course_out)
 
         '''# Generates tensor of dimension [-1, h, w, 3+2]
         t1_course_warp_in = tf.concat([targetImg, t1_course_out], 3)
@@ -437,7 +432,7 @@ class ESPCN(object):
         flowmap_grads = tf.image.sobel_edges(t1_combined_flow)
 
         # Computes huber_loss
-        huber_loss = tf.sqrt(0.01 + tf.reduce_sum((tf.reduce_sum(tf.square(flowmap_grads), axis=(3, 4)))))
+        huber_loss = tf.sqrt(0.01 + tf.reduce_sum(tf.square(flowmap_grads)))
 
         
         '''# Fine Warping
@@ -454,7 +449,7 @@ class ESPCN(object):
                                         kernel_initializer=weight_init,
                                         bias_initializer=biasInitializer,
                                         name='t1_fine_warp', reuse=reuse)'''
-        t1_fine_warp = spatial_transformer_network(targetImg, t1_combined_flow)
+        t1_fine_warp = bilinear_sampler(targetImg, t1_combined_flow)
 
         # Output shape: (batchSize, h, w, c_dim)
         return tf.nn.tanh(t1_fine_warp), huber_loss
