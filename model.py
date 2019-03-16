@@ -265,7 +265,7 @@ class ESPCN(object):
         if self.train_mode == 0:
             
             # Defines loss function for training a single spatial transformer
-            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) + 1e-6*self.huber_loss
+            self.loss = tf.reduce_mean(tf.square(self.labels - self.pred)) + 1e-3*self.huber_loss
         elif self.train_mode == 1 or self.train_mode == 4 or self.train_mode == 6:
             
             # Defines loss function for training subpixel convnet
@@ -432,7 +432,7 @@ class ESPCN(object):
         flowmap_grads = tf.image.sobel_edges(t1_combined_flow)
 
         # Computes huber_loss
-        huber_loss = tf.sqrt(0.01 + tf.reduce_sum(tf.square(flowmap_grads)))
+        huber_loss = tf.sqrt(0.01 + tf.reduce_mean(tf.square(flowmap_grads)))
 
         
         '''# Fine Warping
@@ -967,10 +967,10 @@ class ESPCN(object):
                     print('Shape of output image: ', x.shape)
                     imsave(x, config.result_dir+'/result'+str(i) + '.png', config)
                     imsave(errorMapOut, config.result_dir + '/result_errorMap' + str(i) + '.png', config)
-                    imsave(courseFOut[:, :, 0], config.result_dir + '/result_courseMap0_' + str(i) + '.png', config)
-                    imsave(courseFOut[:, :, 1], config.result_dir + '/result_courseMap1_' + str(i) + '.png', config)
-                    imsave(fineFOut[:, :, 0], config.result_dir + '/result_fineMap0_' + str(i) + '.png', config)
-                    imsave(fineFOut[:, :, 1], config.result_dir + '/result_fineMap1_' + str(i) + '.png', config)
+                    imsave((courseFOut[:, :, 0] + 1)*.5, config.result_dir + '/result_courseMap0_' + str(i) + '.png', config)
+                    imsave((courseFOut[:, :, 1] + 1)*.5, config.result_dir + '/result_courseMap1_' + str(i) + '.png', config)
+                    imsave((fineFOut[:, :, 0] + 1)*.5, config.result_dir + '/result_fineMap0_' + str(i) + '.png', config)
+                    imsave((fineFOut[:, :, 1] + 1)*.5, config.result_dir + '/result_fineMap1_' + str(i) + '.png', config)
                     imsave(courseNorm, config.result_dir + '/result_courseNorm_' + str(i) + '.png', config)
                     imsave(fineNorm, config.result_dir + '/result_fineNorm_' + str(i) + '.png', config)
                 print('Mean Avg Error: ', np.mean(errorLst))
